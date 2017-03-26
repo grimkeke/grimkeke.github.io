@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>如何创建自己的github.io站点</title>
-  <meta name="description" content="hello world, welcome to my site.">
+  <meta name="description" content="玩法 github提供了一种主页服务，当用户在github创建了一个(用户名.github.io)项目后，github会为其生成github.io的静态站点。 比如我的用户名为grimkeke，那么当我创建了grimkeke.github.io项目后，提交一个文本文件（如html）后， 访问https://gri...">
 
   <link rel="stylesheet" href="/assets/main.css">
   <link rel="canonical" href="http://localhost:4000/hello/2017/03/26/how-to-build-your-own-github-io-site.html">
@@ -68,7 +68,13 @@
   </header>
 
   <div class="post-content" itemprop="articleBody">
-    <p>hello world, welcome to my site.</p>
+    <h2 id="玩法">玩法</h2>
+<p>github提供了一种<a href="https://pages.github.com/">主页服务</a>，当用户在github创建了一个(用户名.github.io)项目后，github会为其生成github.io的静态站点。
+比如我的用户名为grimkeke，那么当我创建了grimkeke.github.io项目后，提交一个文本文件（如html）后，
+访问https://grimkeke.github.io即可访问刚才提交的文件，需要注意项目名称必须为自身用户名，否则即使上传了文件，浏览器也会报错404.</p>
+
+<p>对于正式编写blog，推荐使用Jekyll<a href="https://jekyllrb.com/docs/quickstart/">jekyll-url</a>，它支持markdown编写笔记，通过命令生成静态文件，并且与github完全打通，
+通过jekyll创建的项目，直接上传至github后即为最终站点效果。</p>
 
 
   </div>
