@@ -1,3 +1,10 @@
+---
+layout: post
+title:  How To Change Default JRE In IntelliJ Idea
+date:   2017-05-09 12:51:44 +0800
+categories: intellij
+---
+
 Intellij IDEA 默认情况下，使用的jdk的版本是1.6，当第一次启动IDEA的时候，如果系统中未安装jdk，则系统会自动到苹果官网下载jdk安装文件。如果你的系 统已经安装了jdk1.7或是更高的版本，同样首次打开IDEA的时候要求你安装苹果官网jdk1.6。
 
 为了免去多余的jdk安装，解决办法如下：
