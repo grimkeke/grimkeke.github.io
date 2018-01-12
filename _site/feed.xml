@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-01-12T17:30:53+08:00</updated><id>http://localhost:4000/</id><title type="html">小笔记</title><subtitle>simple site to write note.
+</subtitle><author><name>grimkeke</name></author><entry><title type="html">Hello World To Java8</title><link href="http://localhost:4000/java8/2018/01/12/hello-world-to-java8.html" rel="alternate" type="text/html" title="Hello World To Java8" /><published>2018-01-12T11:57:44+08:00</published><updated>2018-01-12T11:57:44+08:00</updated><id>http://localhost:4000/java8/2018/01/12/hello-world-to-java8</id><content type="html" xml:base="http://localhost:4000/java8/2018/01/12/hello-world-to-java8.html">&lt;h2 id=&quot;为什么用java8&quot;&gt;为什么用java8&lt;/h2&gt;
+&lt;p&gt;在了解和学习了java8之后，我发现java8带来的优势和所提升的效率，比学习它的成本要多得多，
+所以在此向大家推荐使用java8的新特性：&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;通过方法参数传递代码块的能力以及使用lambda匿名函数替代实现匿名类。&lt;/li&gt;
+  &lt;li&gt;新的流（Stream）API，提供了一种高层次集合操作方法，并带来了随手可得的并行能力。&lt;/li&gt;
+  &lt;li&gt;为接口提供默认方法的能力，为扩展接口带来了福音。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;传递代码的能力&quot;&gt;传递代码的能力&lt;/h2&gt;
+&lt;p&gt;java8之前的方法参数只能传递对象，而java8允许我们将方法的引用作为参数传递给方法。
+如&lt;code class=&quot;highlighter-rouge&quot;&gt;findApples(apples, Apple::isRedColor)&lt;/code&gt;，我们传递了&lt;code class=&quot;highlighter-rouge&quot;&gt;Apple&lt;/code&gt;类的方法，让
+&lt;code class=&quot;highlighter-rouge&quot;&gt;findApples&lt;/code&gt;方法根据&lt;code class=&quot;highlighter-rouge&quot;&gt;isRedColor&lt;/code&gt;方法筛选需要的苹果。下面介绍一个完整的演变过程。
+如果从一堆苹果中找出大的苹果，你之前可能会写如下代码。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public List&amp;lt;Apple&amp;gt; findBigApples(List&amp;lt;Apple&amp;gt; apples) {
+    List&amp;lt;Apple&amp;gt; results = new ArrayList&amp;lt;&amp;gt;();
+    for (Apple apple : apples) {
+        if (apple.getWeight() &amp;gt; 200) {
+            results.add(apple);
+        }
+    }
+    return results;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;后来可能又有需求是需要找出红苹果，于是可能会新增一个找红苹果的方法。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public List&amp;lt;Apple&amp;gt; findRedApples(List&amp;lt;Apple&amp;gt; apples) {
+    List&amp;lt;Apple&amp;gt; results = new ArrayList&amp;lt;&amp;gt;();
+    for (Apple apple : apples) {
+        if (apple.getColor() == Color.RED) {
+            results.add(apple);
+        }
+    }
+    return results;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;而&lt;code class=&quot;highlighter-rouge&quot;&gt;findBigApples&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;findRedApples&lt;/code&gt;的唯一区别仅仅是判断苹果的条件，所以你可能会通过一个
+接口，将筛选方法作为策略传入。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 判断策略
+public interface Predicate&amp;lt;T&amp;gt; {
+    boolean test(T t);
+}
+
+// 通过指定的策略查找苹果
+public List&amp;lt;Apple&amp;gt; findApples(List&amp;lt;Apple&amp;gt; apples, Predicate&amp;lt;Apple&amp;gt; p) {
+    List&amp;lt;Apple&amp;gt; results = new ArrayList&amp;lt;&amp;gt;();
+    for (Apple apple : apples) {
+        if (p.test(apple)) {  // 如果苹果满足p所代表的筛选方法
+            results.add(apple);
+        }
+    }
+    return results;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;而如果使用了传递代码的能力，你可以将筛选大苹果的使用方法优化为如下：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;findApples(apples, Apple::isBigEnough);
+
+// 其中Apple::isBigEnough为Apple对象的方法引用，isBigEnough方法为判断是否是大苹果的方法
+public boolean isBigEnough() {
+    return this.getWeight() &amp;gt; 200;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;而找出红苹果的方法可以优化为&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;findApples(apples, Apple::isRedColor);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;而对于既要大苹果又要红苹果的情形，你可能会写一个仅用一次的方法，针对这种情况，可以通过
+lambda表达式进行优化。&lt;/p&gt;
+&lt;h3 id=&quot;使用lambda匿名函数&quot;&gt;使用lambda匿名函数&lt;/h3&gt;
+&lt;p&gt;方法&lt;code class=&quot;highlighter-rouge&quot;&gt;public int add(int x, int y) {return x + y;}&lt;/code&gt;可等效于lambda匿名函数
+&lt;code class=&quot;highlighter-rouge&quot;&gt;(int x, int y) -&amp;gt; {return x + y;}&lt;/code&gt;，当代码块只有一行时，可简写为&lt;code class=&quot;highlighter-rouge&quot;&gt;(x, y) -&amp;gt; x + y&lt;/code&gt;。
+所以找出又大又红的苹果可以通过传入lambda表达式实现&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;findApples(apples, (Apple apple) -&amp;gt; {
+    return apple.isBigEnough() &amp;amp;&amp;amp; apple.isRedColor()
+});
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;如果lambda仅有一行表达式，可以省略return语句和两端花括号，同时Apple参数类型也可以省略，
+jvm会根据上下文分析正确的参数类型。所以简化版的表达式如下：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;findApples(apples, (apple) -&amp;gt; apple.isBigEnough() &amp;amp;&amp;amp; apple.isRedColor());
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;有高手会表示之前的java也能通过策略模式向方法中传递代码，比如通过匿名类对接口的实现来传递
+不同的代码块。但是相比冗长地定义接口实现，通过直接传递方法引用和lambda表达式能更加
+简化代码并且提供清晰的可读性。对比一下我们以前通过匿名类实现的找出大苹果的方式，体会一下
+可读性。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;findApples(apples, new Predicate&amp;lt;Apple&amp;gt; {
+    @Override
+    public boolean test(Apple apple) {
+        return apple.isBigEnough();
+    }
+});
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;引入lambda，并不只是一个语法糖，而是通过java7中新的&lt;a href=&quot;http://www.infoq.com/cn/articles/Invokedynamic-Javas-secret-weapon&quot;&gt;invokedynamic&lt;/a&gt;字节码，在运行时
+确定执行的方法，这样可以将Groovy、Scala这类脚本语言进行粘合。&lt;/p&gt;
+
+&lt;h2 id=&quot;流api&quot;&gt;流API&lt;/h2&gt;
+&lt;p&gt;流提供了一种抽象的集合操作，通过类比SQL提供的数据操作指令，流提供了在java环境中的
+一套编程模式，继续找苹果的例子，通过流，我们可以免去编写显示的循环操作，下面通流API，
+使用&lt;code class=&quot;highlighter-rouge&quot;&gt;Apple&lt;/code&gt;的筛选大苹果的方法，从所有苹果中筛选出大苹果并返回。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;import static java.util.stream.Collections.toList;
+List&amp;lt;Apple&amp;gt; bigApples = apples.stream()
+                              .filter((apple) -&amp;gt; apple.isBigEnough())
+                              .collect(toList());
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;上面的示例也可通过传递方法引用表示&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;List&amp;lt;Apple&amp;gt; bigApples = apples.stream()
+                              .filter(Apple::isBigEnough)
+                              .collect(toList());
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;注意其中并没有使用for循环，循环由流隐式内部实现了，由此带来的好处就是可以非常简单地
+获得多处理机上的并行能力，在此之前java并不能主动利用多核，通过多线程提高效率。而使用
+并行流，我们能轻松获得类似流水线的并行处理能力。而其他代码完全无需变更。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;List&amp;lt;Apple&amp;gt; bigApples = apples.parallelStream()
+                              .filter(Apple::isBigEnough)
+                              .collect(toList());
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;接口默认方法&quot;&gt;接口默认方法&lt;/h2&gt;
+&lt;p&gt;接口通过&lt;code class=&quot;highlighter-rouge&quot;&gt;default&lt;/code&gt;关键字可以支持接口中实现方法体，如：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public interface Sample {
+    String getName();
+
+    default void doSomething() {
+        System.out.println(&quot;print default method.&quot;);
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;通过接口默认方法，当我们需要对接口进行变更时，可以避免让接口的所有实现类以及子类进行修改
+和重新编译。接口实现类和其子类可以直接使用接口默认方法。&lt;/p&gt;
+
+&lt;h4 id=&quot;了解更多&quot;&gt;了解更多&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://book.douban.com/subject/26772632/&quot;&gt;《java8实战》&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>grimkeke</name></author><summary type="html">为什么用java8 在了解和学习了java8之后，我发现java8带来的优势和所提升的效率，比学习它的成本要多得多， 所以在此向大家推荐使用java8的新特性： 通过方法参数传递代码块的能力以及使用lambda匿名函数替代实现匿名类。 新的流（Stream）API，提供了一种高层次集合操作方法，并带来了随手可得的并行能力。 为接口提供默认方法的能力，为扩展接口带来了福音。</summary></entry><entry><title type="html">How To Change Default JRE In IntelliJ Idea</title><link href="http://localhost:4000/intellij/2017/05/09/how-to-change-default-jre-in-intellij-idea.html" rel="alternate" type="text/html" title="How To Change Default JRE In IntelliJ Idea" /><published>2017-05-09T12:51:44+08:00</published><updated>2017-05-09T12:51:44+08:00</updated><id>http://localhost:4000/intellij/2017/05/09/how-to-change-default-jre-in-intellij-idea</id><content type="html" xml:base="http://localhost:4000/intellij/2017/05/09/how-to-change-default-jre-in-intellij-idea.html">&lt;p&gt;Intellij IDEA 默认情况下，使用的jdk的版本是1.6，当第一次启动IDEA的时候，如果系统中未安装jdk，则系统会自动到苹果官网下载jdk安装文件。如果你的系 统已经安装了jdk1.7或是更高的版本，同样首次打开IDEA的时候要求你安装苹果官网jdk1.6。&lt;/p&gt;
+
+&lt;p&gt;为了免去多余的jdk安装，解决办法如下：&lt;/p&gt;
+
+&lt;p&gt;到/Applications下找到IntelliJ IDEA 13，右键－&amp;gt;显示包内容－&amp;gt;Contents-&amp;gt;Info.plist，利用文本编辑器或是默认的xcode打开该文件，找到下列代码&lt;/p&gt;
+
+&lt;key&gt;JVMVersion&lt;/key&gt;
+&lt;string&gt;1.6*&lt;/string&gt;
+
+&lt;p&gt;将&lt;string&gt;1.6*&lt;/string&gt;改为&lt;string&gt;1.7*&lt;/string&gt;保存。&lt;/p&gt;
+
+&lt;p&gt;此时idea使用的jdk就是1.7及以上的版本了。&lt;/p&gt;</content><author><name>grimkeke</name></author><summary type="html">Intellij IDEA 默认情况下，使用的jdk的版本是1.6，当第一次启动IDEA的时候，如果系统中未安装jdk，则系统会自动到苹果官网下载jdk安装文件。如果你的系 统已经安装了jdk1.7或是更高的版本，同样首次打开IDEA的时候要求你安装苹果官网jdk1.6。</summary></entry><entry><title type="html">如何创建自己的github.io站点</title><link href="http://localhost:4000/hello/2017/03/26/how-to-build-your-own-github-io-site.html" rel="alternate" type="text/html" title="如何创建自己的github.io站点" /><published>2017-03-26T16:59:44+08:00</published><updated>2017-03-26T16:59:44+08:00</updated><id>http://localhost:4000/hello/2017/03/26/how-to-build-your-own-github-io-site</id><content type="html" xml:base="http://localhost:4000/hello/2017/03/26/how-to-build-your-own-github-io-site.html">&lt;p&gt;github提供了一种&lt;a href=&quot;https://pages.github.com/&quot;&gt;主页服务&lt;/a&gt;，当用户在github创建了一个(用户名.github.io)格式命名的项目后，
+github会为其生成静态站点。 比如我的用户名为grimkeke，那么当我创建了grimkeke.github.io项目，并提交一个文本文件（如html）后，
+访问&lt;a href=&quot;https://grimkeke.github.io&quot;&gt;https://grimkeke.github.io&lt;/a&gt;即可访问刚才提交的文件，需要注意项目名称必须为自身用户名，否则即使上传了文件，浏览器也会报错404.&lt;/p&gt;
+
+&lt;p&gt;对于正式编写blog，推荐使用&lt;a href=&quot;https://jekyllrb.com/docs/quickstart/&quot;&gt;Jekyll&lt;/a&gt;，它支持markdown编写笔记，通过命令生成静态文件，并且与github完全打通，
+通过jekyll创建的项目，直接上传至github后即为最终站点效果。&lt;/p&gt;
+
+&lt;h4 id=&quot;如何使用jekyll&quot;&gt;如何使用jekyll&lt;/h4&gt;
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;Install Jekyll and Bundler gems through RubyGems
+&lt;code class=&quot;highlighter-rouge&quot;&gt;gem install jekyll bundler&lt;/code&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Create a new Jekyll site at ./myblog
+&lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll new myblog&lt;/code&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Change into your new directory
+&lt;code class=&quot;highlighter-rouge&quot;&gt;cd myblog&lt;/code&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Build the site on the preview server
+&lt;code class=&quot;highlighter-rouge&quot;&gt;bundle exec jekyll serve&lt;/code&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Now browse to http://localhost:4000&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;</content><author><name>grimkeke</name></author><summary type="html">github提供了一种主页服务，当用户在github创建了一个(用户名.github.io)格式命名的项目后， github会为其生成静态站点。 比如我的用户名为grimkeke，那么当我创建了grimkeke.github.io项目，并提交一个文本文件（如html）后， 访问https://grimkeke.github.io即可访问刚才提交的文件，需要注意项目名称必须为自身用户名，否则即使上传了文件，浏览器也会报错404.</summary></entry><entry><title type="html">Welcome to Jekyll!</title><link href="http://localhost:4000/jekyll/update/2017/03/26/welcome-to-jekyll.html" rel="alternate" type="text/html" title="Welcome to Jekyll!" /><published>2017-03-26T13:59:44+08:00</published><updated>2017-03-26T13:59:44+08:00</updated><id>http://localhost:4000/jekyll/update/2017/03/26/welcome-to-jekyll</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2017/03/26/welcome-to-jekyll.html">&lt;p&gt;You’ll find this post in your &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll serve&lt;/code&gt;, which launches a web server and auto-regenerates your site when a file is updated.&lt;/p&gt;
+
+&lt;p&gt;To add new posts, simply add a file in the &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory that follows the convention &lt;code class=&quot;highlighter-rouge&quot;&gt;YYYY-MM-DD-name-of-post.ext&lt;/code&gt; and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.&lt;/p&gt;
+
+&lt;p&gt;Jekyll also offers powerful support for code snippets:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Hi, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'Tom'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#=&amp;gt; prints 'Hi, Tom' to STDOUT.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Check out the &lt;a href=&quot;https://jekyllrb.com/docs/home&quot;&gt;Jekyll docs&lt;/a&gt; for more info on how to get the most out of Jekyll. File all bugs/feature requests at &lt;a href=&quot;https://github.com/jekyll/jekyll&quot;&gt;Jekyll’s GitHub repo&lt;/a&gt;. If you have questions, you can ask them on &lt;a href=&quot;https://talk.jekyllrb.com/&quot;&gt;Jekyll Talk&lt;/a&gt;.&lt;/p&gt;</content><author><name>grimkeke</name></author><summary type="html">You’ll find this post in your _posts directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run jekyll serve, which launches a web server and auto-regenerates your site when a file is updated.</summary></entry></feed>
