@@ -12,6 +12,20 @@ github会为其生成静态站点。 比如我的用户名为grimkeke，那么�
 对于正式编写blog，推荐使用[Jekyll][jekyll-url]，它支持markdown编写笔记，通过命令生成静态文件，并且与github完全打通，
 通过jekyll创建的项目，直接上传至github后即为最终站点效果。
 
+##### Install Jekyll and Bundler gems through RubyGems
+gem install jekyll bundler
+
+##### Create a new Jekyll site at ./myblog
+jekyll new myblog
+
+##### Change into your new directory
+cd myblog
+
+##### Build the site on the preview server
+bundle exec jekyll serve
+
+##### Now browse to http://localhost:4000
+
 [jekyll-url]: https://jekyllrb.com/docs/quickstart/
 [github-page]: https://pages.github.com/
 
