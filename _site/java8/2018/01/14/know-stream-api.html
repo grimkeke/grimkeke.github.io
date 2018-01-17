@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>know stream api</title>
+  <meta name="description" content="流（Stream）是一组Java API，通过声明式的方式处理数据集合（类似于SQL，通过编写查询 的语句，而不是亲自实现一个查询功能）。对比之前面向集合，亲自来实现集合操作，通过流， 开发者可以关注与实现的目的，而非实现操作本身。对比如下两段功能一样的代码，查询Dish列表 中卡路里小于400的菜品名称，并且根...">
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="http://0.0.0.0:4000/java8/2018/01/14/know-stream-api.html">
+  <link rel="alternate" type="application/rss+xml" title="小笔记" href="/feed.xml">
+  
+  
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">小笔记</a>
+
+    <nav class="site-nav">
+      <span class="menu-icon">
+        <svg viewBox="0 0 18 15" width="18px" height="15px">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </span>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">关于</a>
+          
+        
+          
+        
+          
+          <a class="page-link" href="/links/">常用链接</a>
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">know stream api</h1>
+    <p class="post-meta"><time datetime="2018-01-14T11:57:44+08:00" itemprop="datePublished">Jan 14, 2018</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>流（Stream）是一组Java API，通过声明式的方式处理数据集合（类似于SQL，通过编写查询
+的语句，而不是亲自实现一个查询功能）。对比之前面向集合，亲自来实现集合操作，通过流，
+开发者可以关注与实现的目的，而非实现操作本身。对比如下两段功能一样的代码，查询Dish列表
+中卡路里小于400的菜品名称，并且根据菜品卡路里排序。java7的方法即为根据语义进行实现，
+即首先遍历所有的菜品，找出小于400卡路里的菜品添加到临时列表，进行排序，然后再创建一个
+列表用于提取菜品的名称。</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>public List&lt;String&gt; getLowCaloricDishesNamesInJava7(List&lt;Dish&gt; dishes){
+    List&lt;Dish&gt; lowCaloricDishes = new ArrayList&lt;&gt;();
+    for(Dish d: dishes){
+        if(d.getCalories() &lt; 400){
+            lowCaloricDishes.add(d);
+        }
+    }
+
+    Collections.sort(lowCaloricDishes, new Comparator&lt;Dish&gt;() {
+        public int compare(Dish d1, Dish d2){
+            return Integer.compare(d1.getCalories(), d2.getCalories());
+        }
+    });
+
+    List&lt;String&gt; lowCaloricDishesName = new ArrayList&lt;&gt;();
+    for(Dish d: lowCaloricDishes){
+        lowCaloricDishesName.add(d.getName());
+    }
+    return lowCaloricDishesName;
+}
+</code></pre>
+</div>
+<p>而java8的流操作就很直观，通过<code class="highlighter-rouge">.stream()</code>方法，将菜品列表
+转换为菜品流，接着通过<code class="highlighter-rouge">filter</code>过滤，通过<code class="highlighter-rouge">sorted</code>进行排序，通过<code class="highlighter-rouge">map</code>将菜品列表映射
+为名称列表，最后通过<code class="highlighter-rouge">collect</code>收集保存为List。</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>public List&lt;String&gt; getLowCaloricDishesNamesInJava8(List&lt;Dish&gt; dishes){
+    return dishes.stream()
+            .filter(d -&gt; d.getCalories() &lt; 400)
+            .sorted(Comparator.comparing(Dish::getCalories))
+            .map(Dish::getName)
+            .collect(Collectors.toList());
+}
+</code></pre>
+</div>
+<p>而将流操作转变为并行操作也非常简单，只需将<code class="highlighter-rouge">.stream()</code>方法修改为<code class="highlighter-rouge">.parallelStream()</code>
+方法即可。流默认会根据当前运行机器的内核数来进行并行执行。</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>public List&lt;String&gt; getLowCaloricDishesNamesInJava8(List&lt;Dish&gt; dishes){
+    return dishes.parallelStream()
+            .filter(d -&gt; d.getCalories() &lt; 400)
+            .sorted(Comparator.comparing(Dish::getCalories))
+            .map(Dish::getName)
+            .collect(Collectors.toList());
+}
+</code></pre>
+</div>
+<p>除了生命式的表述数据操作方式之外，流的编写模式是链式的，即通过一系列方法组合成操作
+流水线。而在流的内部，每个处理节点的操作也像流水线一样并行处理。</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>           lamdba             lambda             lambda
+             +                   +                  +
+             |                   |                  |
+menu    +----v-----+       +-----v----+       +-----v----+      +---------+
++-------&gt;  filter  +-------&gt;  sorted  +-------&gt;   map    +------&gt; collect |
+        +----------+       +----------+       +----------+      +---------+
+</code></pre>
+</div>
+<p>即流有如下三个特点：声明式、可复合（链式）、可并行。</p>
+<h2 id="流与集合的理解">流与集合的理解</h2>
+<p>集合可以理解为空间上的一组序列，首先集合中的元素必须都存在才能产生集合，如我们无法创建
+一个偶数的集合，因为偶数是无穷的，因此集合是无穷的，空间上无法确定集合大小。而流则可以
+理解为时间上的一组序列，流中的元素不必全部产生后才可使用，因此，流有按需生产、延迟生产
+的特点，我们可以很轻易地创建一个包含所有偶数的流，只不过这个流中的元素永远也输出不完。</p>
+<h3 id="外部迭代和内部迭代">外部迭代和内部迭代</h3>
+<p>集合中的元素是确定的，并且我们需要自行创建迭代来遍历集合中的所有元素；而流中的元素则
+是由内部迭代完成的，迭代交给流来进行有很多好处，首先带来了声明式的简洁，且因为迭代在
+内部进行，流的实现者可以为我们提供了迭代优化和并行优化（具体通过java7提供的fork-join
+框架实现）</p>
+<h3 id="流的操作">流的操作</h3>
+<p>流分为中间操作和终端操作两种操作类型。中间操作并不真正操作流中的元素，而是建设起操作流
+的流水线，这种流的延迟特性带来了<code class="highlighter-rouge">循环合并</code>以及<code class="highlighter-rouge">短路</code>等优化技巧的用武之地。而终端操作则会
+从流水线生成结果。这个结果是任何不是流的值，比如void，List，int等。并且流只能够遍历
+一次，所以无法一次链式处理的流操作，需要再次打开流，进行第二次遍历处理。在上述例子中，
+filter、sorted、map为中间操作，collect为终端操作。</p>
+<h2 id="使用流">使用流</h2>
+<p>流提供了许多操作，能够给你快速完成复杂的数据处理，如筛选、切片、映射、查找、匹配和规约。</p>
+<h3 id="筛选">筛选</h3>
+<p>通过谓词筛选，<code class="highlighter-rouge">filter</code>接口<code class="highlighter-rouge">Stream&lt;T&gt; filter(Predicate&lt;? super T&gt; predicate)</code>需要
+提供一个谓词，而谓词是一个返回<code class="highlighter-rouge">true</code>或者<code class="highlighter-rouge">false</code>的接口，用于根据指定元素t进行条件判断</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>public interface Predicate&lt;T&gt; {
+    /**
+     * Evaluates this predicate on the given argument.
+     *
+     * @param t the input argument
+     * @return {@code true} if the input argument matches the predicate,
+     * otherwise {@code false}
+     */
+    boolean test(T t);
+}
+</code></pre>
+</div>
+<p>在本例中，我们通过传入<code class="highlighter-rouge">Dish</code>对象的方法引用<code class="highlighter-rouge">Dish::isVegetarian</code>来告诉菜品流，我们要
+过滤出所有的素食菜品</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>List&lt;Dish&gt; vegetarianMenu = menu.stream()
+                                .filter(Dish::isVegetarian)
+                                .collect(toList());
+</code></pre>
+</div>
+<p><code class="highlighter-rouge">Dish</code>对象中判断是否是素食的方法</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>public boolean isVegetarian() {
+        return vegetarian;
+}
+</code></pre>
+</div>
+<p>而根据lambda表达式，过滤方法也可以按如下形式表达</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>List&lt;Dish&gt; vegetarianMenu = menu.stream()
+                                .filter(dish -&gt; dish.isVegetarian())
+                                .collect(toList());
+</code></pre>
+</div>
+<h3 id="筛选各异的元素">筛选各异的元素</h3>
+<p>通过<code class="highlighter-rouge">distinct()</code>方法，我们可以筛选出不重复的元素</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>List&lt;Integer&gt; numbers = Arrays.asList(1, 2, 1, 3, 3, 2, 4);
+numbers.stream()
+       .filter(i -&gt; i % 2 == 0)
+       .distinct()
+       .forEach(System.out::println);
+</code></pre>
+</div>
+<h3 id="截短流">截短流</h3>
+<p>通过<code class="highlighter-rouge">limit(3)</code>将流的输出限制为3个，在流的内部实现中，会采用一种叫做<code class="highlighter-rouge">短路</code>的优化，即
+无需完整过滤完整个流，只要<code class="highlighter-rouge">filter()</code>方法过滤出3个菜品，即马上停止流的内部遍历，通过
+<code class="highlighter-rouge">collect()</code>方法返回列表。</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>List&lt;Dish&gt; dishesLimit3 = menu.stream()
+                .filter(d -&gt; d.getCalories() &gt; 300)
+                .limit(3)
+                .collect(toList());
+</code></pre>
+</div>
+<h3 id="跳过元素">跳过元素</h3>
+<p>通过<code class="highlighter-rouge">skip(2)</code>方法，返回一个丢弃了前两个元素的流。</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>List&lt;Dish&gt; dishesSkip2 = menu.stream()
+                .filter(d -&gt; d.getCalories() &gt; 300)
+                .skip(2)
+                .collect(toList());
+</code></pre>
+</div>
+<h3 id="映射">映射</h3>
+<p>映射类似于SQL里筛选出一张表中的某一列数据，通过<code class="highlighter-rouge">map</code>和<code class="highlighter-rouge">flatMap</code>方法，我们可以将流
+中的元素结合映射为另一种类型的集合，比如从菜品流<code class="highlighter-rouge">List&lt;Dish&gt;</code>选出所有菜品的名称<code class="highlighter-rouge">List&lt;String&gt;</code>。
+<code class="highlighter-rouge">map</code>接口<code class="highlighter-rouge">&lt;R&gt; Stream&lt;R&gt; map(Function&lt;? super T, ? extends R&gt; mapper)</code>需要
+传入一个<code class="highlighter-rouge">Function</code>类型的函数式接口，这个接口的作用是把传入的参数从一种类型转换为另一种类型，
+就菜品转换而言，流内部的循环会通过这个接口把单个<code class="highlighter-rouge">Dish</code>元素转变为<code class="highlighter-rouge">String</code>元素，然后
+通过内部迭代器收集对象，最终通过<code class="highlighter-rouge">collect</code>输出为列表或者做其他处理。</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>public interface Function&lt;T, R&gt; {
+    /**
+     * Applies this function to the given argument.
+     *
+     * @param t the function argument
+     * @return the function result
+     */
+    R apply(T t);
+}
+</code></pre>
+</div>
+<p>在本例中，我们通过<code class="highlighter-rouge">map</code>方法，将<code class="highlighter-rouge">Dish</code>对象映射为<code class="highlighter-rouge">String</code>对象，即获取菜品的名称，最后
+通过<code class="highlighter-rouge">Collectors.toList()</code>方法采集输出为字符串列表。</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>List&lt;String&gt; dishNames = menu.stream()
+                             .map(Dish::getName)
+                             .collect(toList());
+</code></pre>
+</div>
+<p><code class="highlighter-rouge">Dish</code>对象中获取菜品名称的方法如下</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>public String getName() {
+        return name;
+}
+</code></pre>
+</div>
+<p>下面的例子展示了计算数组中每个单词的长度，通过方法引用<code class="highlighter-rouge">String::length</code>获得每个单词
+的长度，返回类型<code class="highlighter-rouge">int</code>通过java的自动装箱操作转换为<code class="highlighter-rouge">Integer</code>类型（自动装箱操作有额外
+操作成本，需要进行关注，后续会介绍java8提供的几个原生Stream类型用于提高性能），</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>List&lt;String&gt; words = Arrays.asList("Hello", "World");
+List&lt;Integer&gt; wordLengths = words.stream()
+                                 .map(String::length)
+                                 .collect(toList());
+</code></pre>
+</div>
+<h4 id="流的扁平化">流的扁平化</h4>
+<p><code class="highlighter-rouge">flatMap</code>方法<code class="highlighter-rouge">&lt;R&gt; Stream&lt;R&gt; flatMap(Function&lt;? super T, ? extends Stream&lt;? extends R&gt;&gt; mapper)</code></p>
+
+
+  </div>
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <!--<h2 class="footer-heading">小笔记</h2>-->
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>
+            
+              by grimkeke
+            
+            </li>
+            
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/grimkeke"><span class="icon icon--github"><svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">grimkeke</span></a>
+
+          </li>
+          
+
+          
+          <li>
+            <!--<a href="https://twitter.com/grimkeke"><span class="icon icon--twitter"><svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/></svg>
+</span><span class="username">grimkeke</span></a>
+-->
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <!--<p>simple site to write note.
+</p>-->
+        <p><a href="/feed.xml">RSS订阅</a></p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
