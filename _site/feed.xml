@@ -1,5 +1,187 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://0.0.0.0:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://0.0.0.0:4000/" rel="alternate" type="text/html" /><updated>2018-01-12T17:53:44+08:00</updated><id>http://0.0.0.0:4000/</id><title type="html">小笔记</title><subtitle>simple site to write note.
-</subtitle><author><name>grimkeke</name></author><entry><title type="html">Hello World To Java8</title><link href="http://0.0.0.0:4000/java8/2018/01/12/hello-world-to-java8.html" rel="alternate" type="text/html" title="Hello World To Java8" /><published>2018-01-12T11:57:44+08:00</published><updated>2018-01-12T11:57:44+08:00</updated><id>http://0.0.0.0:4000/java8/2018/01/12/hello-world-to-java8</id><content type="html" xml:base="http://0.0.0.0:4000/java8/2018/01/12/hello-world-to-java8.html">&lt;h2 id=&quot;为什么用java8&quot;&gt;为什么用java8&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://0.0.0.0:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://0.0.0.0:4000/" rel="alternate" type="text/html" /><updated>2018-01-17T18:05:53+08:00</updated><id>http://0.0.0.0:4000/</id><title type="html">小笔记</title><subtitle>simple site to write note.
+</subtitle><author><name>grimkeke</name></author><entry><title type="html">know stream api</title><link href="http://0.0.0.0:4000/java8/2018/01/14/know-stream-api.html" rel="alternate" type="text/html" title="know stream api" /><published>2018-01-14T11:57:44+08:00</published><updated>2018-01-14T11:57:44+08:00</updated><id>http://0.0.0.0:4000/java8/2018/01/14/know-stream-api</id><content type="html" xml:base="http://0.0.0.0:4000/java8/2018/01/14/know-stream-api.html">&lt;p&gt;流（Stream）是一组Java API，通过声明式的方式处理数据集合（类似于SQL，通过编写查询
+的语句，而不是亲自实现一个查询功能）。对比之前面向集合，亲自来实现集合操作，通过流，
+开发者可以关注与实现的目的，而非实现操作本身。对比如下两段功能一样的代码，查询Dish列表
+中卡路里小于400的菜品名称，并且根据菜品卡路里排序。java7的方法即为根据语义进行实现，
+即首先遍历所有的菜品，找出小于400卡路里的菜品添加到临时列表，进行排序，然后再创建一个
+列表用于提取菜品的名称。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public List&amp;lt;String&amp;gt; getLowCaloricDishesNamesInJava7(List&amp;lt;Dish&amp;gt; dishes){
+    List&amp;lt;Dish&amp;gt; lowCaloricDishes = new ArrayList&amp;lt;&amp;gt;();
+    for(Dish d: dishes){
+        if(d.getCalories() &amp;lt; 400){
+            lowCaloricDishes.add(d);
+        }
+    }
+
+    Collections.sort(lowCaloricDishes, new Comparator&amp;lt;Dish&amp;gt;() {
+        public int compare(Dish d1, Dish d2){
+            return Integer.compare(d1.getCalories(), d2.getCalories());
+        }
+    });
+
+    List&amp;lt;String&amp;gt; lowCaloricDishesName = new ArrayList&amp;lt;&amp;gt;();
+    for(Dish d: lowCaloricDishes){
+        lowCaloricDishesName.add(d.getName());
+    }
+    return lowCaloricDishesName;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;而java8的流操作就很直观，通过&lt;code class=&quot;highlighter-rouge&quot;&gt;.stream()&lt;/code&gt;方法，将菜品列表
+转换为菜品流，接着通过&lt;code class=&quot;highlighter-rouge&quot;&gt;filter&lt;/code&gt;过滤，通过&lt;code class=&quot;highlighter-rouge&quot;&gt;sorted&lt;/code&gt;进行排序，通过&lt;code class=&quot;highlighter-rouge&quot;&gt;map&lt;/code&gt;将菜品列表映射
+为名称列表，最后通过&lt;code class=&quot;highlighter-rouge&quot;&gt;collect&lt;/code&gt;收集保存为List。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public List&amp;lt;String&amp;gt; getLowCaloricDishesNamesInJava8(List&amp;lt;Dish&amp;gt; dishes){
+    return dishes.stream()
+            .filter(d -&amp;gt; d.getCalories() &amp;lt; 400)
+            .sorted(Comparator.comparing(Dish::getCalories))
+            .map(Dish::getName)
+            .collect(Collectors.toList());
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;而将流操作转变为并行操作也非常简单，只需将&lt;code class=&quot;highlighter-rouge&quot;&gt;.stream()&lt;/code&gt;方法修改为&lt;code class=&quot;highlighter-rouge&quot;&gt;.parallelStream()&lt;/code&gt;
+方法即可。流默认会根据当前运行机器的内核数来进行并行执行。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public List&amp;lt;String&amp;gt; getLowCaloricDishesNamesInJava8(List&amp;lt;Dish&amp;gt; dishes){
+    return dishes.parallelStream()
+            .filter(d -&amp;gt; d.getCalories() &amp;lt; 400)
+            .sorted(Comparator.comparing(Dish::getCalories))
+            .map(Dish::getName)
+            .collect(Collectors.toList());
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;除了生命式的表述数据操作方式之外，流的编写模式是链式的，即通过一系列方法组合成操作
+流水线。而在流的内部，每个处理节点的操作也像流水线一样并行处理。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;           lamdba             lambda             lambda
+             +                   +                  +
+             |                   |                  |
+menu    +----v-----+       +-----v----+       +-----v----+      +---------+
++-------&amp;gt;  filter  +-------&amp;gt;  sorted  +-------&amp;gt;   map    +------&amp;gt; collect |
+        +----------+       +----------+       +----------+      +---------+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;即流有如下三个特点：声明式、可复合（链式）、可并行。&lt;/p&gt;
+&lt;h2 id=&quot;流与集合的理解&quot;&gt;流与集合的理解&lt;/h2&gt;
+&lt;p&gt;集合可以理解为空间上的一组序列，首先集合中的元素必须都存在才能产生集合，如我们无法创建
+一个偶数的集合，因为偶数是无穷的，因此集合是无穷的，空间上无法确定集合大小。而流则可以
+理解为时间上的一组序列，流中的元素不必全部产生后才可使用，因此，流有按需生产、延迟生产
+的特点，我们可以很轻易地创建一个包含所有偶数的流，只不过这个流中的元素永远也输出不完。&lt;/p&gt;
+&lt;h3 id=&quot;外部迭代和内部迭代&quot;&gt;外部迭代和内部迭代&lt;/h3&gt;
+&lt;p&gt;集合中的元素是确定的，并且我们需要自行创建迭代来遍历集合中的所有元素；而流中的元素则
+是由内部迭代完成的，迭代交给流来进行有很多好处，首先带来了声明式的简洁，且因为迭代在
+内部进行，流的实现者可以为我们提供了迭代优化和并行优化（具体通过java7提供的fork-join
+框架实现）&lt;/p&gt;
+&lt;h3 id=&quot;流的操作&quot;&gt;流的操作&lt;/h3&gt;
+&lt;p&gt;流分为中间操作和终端操作两种操作类型。中间操作并不真正操作流中的元素，而是建设起操作流
+的流水线，这种流的延迟特性带来了&lt;code class=&quot;highlighter-rouge&quot;&gt;循环合并&lt;/code&gt;以及&lt;code class=&quot;highlighter-rouge&quot;&gt;短路&lt;/code&gt;等优化技巧的用武之地。而终端操作则会
+从流水线生成结果。这个结果是任何不是流的值，比如void，List，int等。并且流只能够遍历
+一次，所以无法一次链式处理的流操作，需要再次打开流，进行第二次遍历处理。在上述例子中，
+filter、sorted、map为中间操作，collect为终端操作。&lt;/p&gt;
+&lt;h2 id=&quot;使用流&quot;&gt;使用流&lt;/h2&gt;
+&lt;p&gt;流提供了许多操作，能够给你快速完成复杂的数据处理，如筛选、切片、映射、查找、匹配和规约。&lt;/p&gt;
+&lt;h3 id=&quot;筛选&quot;&gt;筛选&lt;/h3&gt;
+&lt;p&gt;通过谓词筛选，&lt;code class=&quot;highlighter-rouge&quot;&gt;filter&lt;/code&gt;接口&lt;code class=&quot;highlighter-rouge&quot;&gt;Stream&amp;lt;T&amp;gt; filter(Predicate&amp;lt;? super T&amp;gt; predicate)&lt;/code&gt;需要
+提供一个谓词，而谓词是一个返回&lt;code class=&quot;highlighter-rouge&quot;&gt;true&lt;/code&gt;或者&lt;code class=&quot;highlighter-rouge&quot;&gt;false&lt;/code&gt;的接口，用于根据指定元素t进行条件判断&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public interface Predicate&amp;lt;T&amp;gt; {
+    /**
+     * Evaluates this predicate on the given argument.
+     *
+     * @param t the input argument
+     * @return {@code true} if the input argument matches the predicate,
+     * otherwise {@code false}
+     */
+    boolean test(T t);
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;在本例中，我们通过传入&lt;code class=&quot;highlighter-rouge&quot;&gt;Dish&lt;/code&gt;对象的方法引用&lt;code class=&quot;highlighter-rouge&quot;&gt;Dish::isVegetarian&lt;/code&gt;来告诉菜品流，我们要
+过滤出所有的素食菜品&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;List&amp;lt;Dish&amp;gt; vegetarianMenu = menu.stream()
+                                .filter(Dish::isVegetarian)
+                                .collect(toList());
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Dish&lt;/code&gt;对象中判断是否是素食的方法&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public boolean isVegetarian() {
+        return vegetarian;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;而根据lambda表达式，过滤方法也可以按如下形式表达&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;List&amp;lt;Dish&amp;gt; vegetarianMenu = menu.stream()
+                                .filter(dish -&amp;gt; dish.isVegetarian())
+                                .collect(toList());
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;h3 id=&quot;筛选各异的元素&quot;&gt;筛选各异的元素&lt;/h3&gt;
+&lt;p&gt;通过&lt;code class=&quot;highlighter-rouge&quot;&gt;distinct()&lt;/code&gt;方法，我们可以筛选出不重复的元素&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;List&amp;lt;Integer&amp;gt; numbers = Arrays.asList(1, 2, 1, 3, 3, 2, 4);
+numbers.stream()
+       .filter(i -&amp;gt; i % 2 == 0)
+       .distinct()
+       .forEach(System.out::println);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;h3 id=&quot;截短流&quot;&gt;截短流&lt;/h3&gt;
+&lt;p&gt;通过&lt;code class=&quot;highlighter-rouge&quot;&gt;limit(3)&lt;/code&gt;将流的输出限制为3个，在流的内部实现中，会采用一种叫做&lt;code class=&quot;highlighter-rouge&quot;&gt;短路&lt;/code&gt;的优化，即
+无需完整过滤完整个流，只要&lt;code class=&quot;highlighter-rouge&quot;&gt;filter()&lt;/code&gt;方法过滤出3个菜品，即马上停止流的内部遍历，通过
+&lt;code class=&quot;highlighter-rouge&quot;&gt;collect()&lt;/code&gt;方法返回列表。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;List&amp;lt;Dish&amp;gt; dishesLimit3 = menu.stream()
+                .filter(d -&amp;gt; d.getCalories() &amp;gt; 300)
+                .limit(3)
+                .collect(toList());
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;h3 id=&quot;跳过元素&quot;&gt;跳过元素&lt;/h3&gt;
+&lt;p&gt;通过&lt;code class=&quot;highlighter-rouge&quot;&gt;skip(2)&lt;/code&gt;方法，返回一个丢弃了前两个元素的流。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;List&amp;lt;Dish&amp;gt; dishesSkip2 = menu.stream()
+                .filter(d -&amp;gt; d.getCalories() &amp;gt; 300)
+                .skip(2)
+                .collect(toList());
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;h3 id=&quot;映射&quot;&gt;映射&lt;/h3&gt;
+&lt;p&gt;映射类似于SQL里筛选出一张表中的某一列数据，通过&lt;code class=&quot;highlighter-rouge&quot;&gt;map&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;flatMap&lt;/code&gt;方法，我们可以将流
+中的元素结合映射为另一种类型的集合，比如从菜品流&lt;code class=&quot;highlighter-rouge&quot;&gt;List&amp;lt;Dish&amp;gt;&lt;/code&gt;选出所有菜品的名称&lt;code class=&quot;highlighter-rouge&quot;&gt;List&amp;lt;String&amp;gt;&lt;/code&gt;。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;map&lt;/code&gt;接口&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;R&amp;gt; Stream&amp;lt;R&amp;gt; map(Function&amp;lt;? super T, ? extends R&amp;gt; mapper)&lt;/code&gt;需要
+传入一个&lt;code class=&quot;highlighter-rouge&quot;&gt;Function&lt;/code&gt;类型的函数式接口，这个接口的作用是把传入的参数从一种类型转换为另一种类型，
+就菜品转换而言，流内部的循环会通过这个接口把单个&lt;code class=&quot;highlighter-rouge&quot;&gt;Dish&lt;/code&gt;元素转变为&lt;code class=&quot;highlighter-rouge&quot;&gt;String&lt;/code&gt;元素，然后
+通过内部迭代器收集对象，最终通过&lt;code class=&quot;highlighter-rouge&quot;&gt;collect&lt;/code&gt;输出为列表或者做其他处理。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public interface Function&amp;lt;T, R&amp;gt; {
+    /**
+     * Applies this function to the given argument.
+     *
+     * @param t the function argument
+     * @return the function result
+     */
+    R apply(T t);
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;在本例中，我们通过&lt;code class=&quot;highlighter-rouge&quot;&gt;map&lt;/code&gt;方法，将&lt;code class=&quot;highlighter-rouge&quot;&gt;Dish&lt;/code&gt;对象映射为&lt;code class=&quot;highlighter-rouge&quot;&gt;String&lt;/code&gt;对象，即获取菜品的名称，最后
+通过&lt;code class=&quot;highlighter-rouge&quot;&gt;Collectors.toList()&lt;/code&gt;方法采集输出为字符串列表。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;List&amp;lt;String&amp;gt; dishNames = menu.stream()
+                             .map(Dish::getName)
+                             .collect(toList());
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Dish&lt;/code&gt;对象中获取菜品名称的方法如下&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public String getName() {
+        return name;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;下面的例子展示了计算数组中每个单词的长度，通过方法引用&lt;code class=&quot;highlighter-rouge&quot;&gt;String::length&lt;/code&gt;获得每个单词
+的长度，返回类型&lt;code class=&quot;highlighter-rouge&quot;&gt;int&lt;/code&gt;通过java的自动装箱操作转换为&lt;code class=&quot;highlighter-rouge&quot;&gt;Integer&lt;/code&gt;类型（自动装箱操作有额外
+操作成本，需要进行关注，后续会介绍java8提供的几个原生Stream类型用于提高性能），&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;List&amp;lt;String&amp;gt; words = Arrays.asList(&quot;Hello&quot;, &quot;World&quot;);
+List&amp;lt;Integer&amp;gt; wordLengths = words.stream()
+                                 .map(String::length)
+                                 .collect(toList());
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;h4 id=&quot;流的扁平化&quot;&gt;流的扁平化&lt;/h4&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;flatMap&lt;/code&gt;方法&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;R&amp;gt; Stream&amp;lt;R&amp;gt; flatMap(Function&amp;lt;? super T, ? extends Stream&amp;lt;? extends R&amp;gt;&amp;gt; mapper)&lt;/code&gt;&lt;/p&gt;</content><author><name>grimkeke</name></author><summary type="html">流（Stream）是一组Java API，通过声明式的方式处理数据集合（类似于SQL，通过编写查询 的语句，而不是亲自实现一个查询功能）。对比之前面向集合，亲自来实现集合操作，通过流， 开发者可以关注与实现的目的，而非实现操作本身。对比如下两段功能一样的代码，查询Dish列表 中卡路里小于400的菜品名称，并且根据菜品卡路里排序。java7的方法即为根据语义进行实现， 即首先遍历所有的菜品，找出小于400卡路里的菜品添加到临时列表，进行排序，然后再创建一个 列表用于提取菜品的名称。 ``` public List getLowCaloricDishesNamesInJava7(List dishes){ List lowCaloricDishes = new ArrayList&amp;lt;&amp;gt;(); for(Dish d: dishes){ if(d.getCalories() &amp;lt; 400){ lowCaloricDishes.add(d); } }</summary></entry><entry><title type="html">Hello World To Java8</title><link href="http://0.0.0.0:4000/java8/2018/01/12/hello-world-to-java8.html" rel="alternate" type="text/html" title="Hello World To Java8" /><published>2018-01-12T11:57:44+08:00</published><updated>2018-01-12T11:57:44+08:00</updated><id>http://0.0.0.0:4000/java8/2018/01/12/hello-world-to-java8</id><content type="html" xml:base="http://0.0.0.0:4000/java8/2018/01/12/hello-world-to-java8.html">&lt;h2 id=&quot;为什么用java8&quot;&gt;为什么用java8&lt;/h2&gt;
 &lt;p&gt;在了解和学习了java8之后，我发现java8带来的优势和所提升的效率，比学习它的成本要多得多，
 所以在此向大家推荐使用java8的新特性：&lt;/p&gt;
 &lt;ol&gt;
