@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  know stream api
+title:  Stream读书笔记
 date:   2018-01-14 11:57:44 +0800
 categories: java8
 ---
@@ -187,4 +187,94 @@ List<Integer> wordLengths = words.stream()
 ```
 #### 流的扁平化
 `flatMap`方法`<R> Stream<R> flatMap(Function<? super T, ? extends Stream<? extends R>> mapper)`
+需要传入一个输出转换结果为流的函数方法。即`flatMap`首先将输入流中的每个元素，
+通过`Function`接口转换为对应的流，然后再将所有得到的流连接起来成为一个流。
+为了输出单词列表中所有出现的不同字母，我们首先通过`Arrays.stream()`方法将输入字符串
+转换为`Stream<String>`，然后每个单词转换的流进行数据整合，归集为一个`Stream<String>`
+流，最后通过`distinct()`方法筛选流中所有不重复的字母。
+```
+words.stream()
+     .flatMap((String line) -> Arrays.stream(line.split("")))
+     .distinct()
+     .forEach(System.out::println);
+```
+### 匹配
+- 检查谓词是否至少匹配一个元素：`boolean anyMatch(Predicate<? super T> predicate);`
+```
+menu.stream()
+    .anyMatch(Dish::isVegetarian);  // 菜单中是否有一个素菜
+```
+- 检查谓词匹配所有元素：`boolean allMatch(Predicate<? super T> predicate);`
+```
+menu.stream()
+    .allMatch(d -> d.getCalories() < 1000);  // 所有菜品卡路里是否小于1000
+```
+- 检查谓词对所有元素均不匹配：`boolean noneMatch(Predicate<? super T> predicate);`
+```
+menu.stream()
+    .noneMatch(d -> d.getCalories() >= 1000); // 所有菜品卡路里是否不大于1000
+```
+这三个查找方法均使用到了短路优化，即在满足条件时，无需完整遍历流中所有元素，即可返回结果。
+### 查找元素
+- 查找任意元素：`Optional<T> findAny();`
+```
+Optional<Dish> dish = menu.stream()
+            .filter(Dish::isVegetarian).findAny();  // 找出菜单任意一个素菜
+dish.ifPresent(d -> System.out.println(d.getName())); // 如果有素菜则打印菜名
+```
+- 查找第一个元素：`Optional<T> findFirst();`
+```
+Optional<Dish> dish = menu.stream()
+            .filter(Dish::isVegetarian).findFirst();  // 找出菜单第一个素菜
+```
+查找元素返回的是一个`Optional<T>`类型，用于表示对象是否存在，通过`ifPresent(Consumer<? super T> consumer)`
+方法可以传入一个消费者，当对象存在时，执行消费者的消费动作。
+```
+public interface Consumer<T> {
+    /**
+     * Performs this operation on the given argument.
+     *
+     * @param t the input argument
+     */
+    void accept(T t);
+```
+### 归约
+归约用来将一系列元素折叠成一个元素，比如对1至100的数字求和，通过归约操作，我们可以不断
+对累积值和流中的数字使用加法，从而完成所有数字的累加，最终累积值即为所有元素之和。归约
+操作通过`reduce()`方法实现。我们先来看一下它的用法。
+```
+List<Integer> numbers = Arrays.asList(3,4,5,1,2);
+int sum = numbers.stream().reduce(0, (a, b) -> a + b);
 
+// 通过Integer提供的求和静态方法sum完成累加
+int sum2 = numbers.stream().reduce(0, Integer::sum);
+```
+该方法有如下两种重载：
+- 提供初始值，以及一个二元操作的方法引用，上面例子使用的是该用法，通过提供初始值以及
+一个函数引用，我们向流提供一种累加的方法，即我们需要一个整数，初始值为0，通过`(a, b) -> a + b`方法
+（即`Integer::sum`）不断与流中的元素进行归约计算，最终得到累加和的输出。
+```
+T reduce(T identity, BinaryOperator<T> accumulator);
+```
+- 仅提供二元操作的方法引用，因此当流为空时，可能会返回空结果，因此方法签名的返回值为
+一个可选的`Optional<T>`。
+```
+Optional<T> reduce(BinaryOperator<T> accumulator);
+```
+同时，我们也可以通过归约来求出流中的最大值最小值，因为求出流中的最大值最小值也是分别
+两两比较流内的数字。下面例子可以计算如何求流的最大值，当流为空时，最大值为0。
+```
+int max = numbers.stream().reduce(0, (a, b) -> Integer.max(a, b));
+```
+这不一定是你期望的结果，因此可以采用`reduce()`方法的单参数重载方法。并根据流非空的情况
+进行相应处理。
+```
+Optional<Integer> min = numbers.stream().reduce(Integer::min);
+min.ifPresent(System.out::println);
+```
+### 收集
+```
+<R> R collect(Supplier<R> supplier,
+                  BiConsumer<R, ? super T> accumulator,
+                  BiConsumer<R, R> combiner);
+```
