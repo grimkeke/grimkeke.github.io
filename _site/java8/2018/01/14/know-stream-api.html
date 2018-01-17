@@ -281,9 +281,12 @@ List&lt;Integer&gt; wordLengths = words.stream()
   .noneMatch(d -&gt; d.getCalories() &gt;= 1000); // 所有菜品卡路里是否不大于1000
 </code></pre>
     </div>
-    <p>这三个查找方法均使用到了短路优化，即在满足条件时，无需完整遍历流中所有元素，即可返回结果。</p>
-    <h3 id="查找元素">查找元素</h3>
   </li>
+</ul>
+
+<p>这三个查找方法均使用到了短路优化，即在满足条件时，无需完整遍历流中所有元素，即可返回结果。</p>
+<h3 id="查找元素">查找元素</h3>
+<ul>
   <li>查找任意元素：<code class="highlighter-rouge">Optional&lt;T&gt; findAny();</code>
     <div class="highlighter-rouge"><pre class="highlight"><code>Optional&lt;Dish&gt; dish = menu.stream()
           .filter(Dish::isVegetarian).findAny();  // 找出菜单任意一个素菜
@@ -296,58 +299,64 @@ dish.ifPresent(d -&gt; System.out.println(d.getName())); // 如果有素菜则�
           .filter(Dish::isVegetarian).findFirst();  // 找出菜单第一个素菜
 </code></pre>
     </div>
-    <p>查找元素返回的是一个<code class="highlighter-rouge">Optional&lt;T&gt;</code>类型，用于表示对象是否存在，通过<code class="highlighter-rouge">ifPresent(Consumer&lt;? super T&gt; consumer)</code>
-方法可以传入一个消费者，当对象存在时，执行消费者的消费动作。
-```
-public interface Consumer<T> {
-  /**</T></p>
-    <ul>
-      <li>Performs this operation on the given argument.
-   *</li>
-      <li>@param t the input argument
-   */
-  void accept(T t);
-        <div class="highlighter-rouge"><pre class="highlight"><code>### 归约
-归约用来将一系列元素折叠成一个元素，比如对1至100的数字求和，通过归约操作，我们可以不断
-对累积值和流中的数字使用加法，从而完成所有数字的累加，最终累积值即为所有元素之和。归约
-操作通过`reduce()`方法实现。我们先来看一下它的用法。
-</code></pre>
-        </div>
-        <p>List<Integer> numbers = Arrays.asList(3,4,5,1,2);
-int sum = numbers.stream().reduce(0, (a, b) -&gt; a + b);</Integer></p>
-      </li>
-    </ul>
   </li>
 </ul>
 
-<p>// 通过Integer提供的求和静态方法sum完成累加
-int sum2 = numbers.stream().reduce(0, Integer::sum);</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>该方法有如下两种重载：
-- 提供初始值，以及一个二元操作的方法引用，上面例子使用的是该用法，通过提供初始值以及
-一个函数引用，我们向流提供一种累加的方法，即我们需要一个整数，初始值为0，通过`(a, b) -&gt; a + b`方法
-（即`Integer::sum`）不断与流中的元素进行归约计算，最终得到累加和的输出。
+<p>查找元素返回的是一个<code class="highlighter-rouge">Optional&lt;T&gt;</code>类型，用于表示对象是否存在，通过
+<code class="highlighter-rouge">ifPresent(Consumer&lt;? super T&gt; consumer)</code>方法可以传入一个消费者，当对象存在时，执行消费者的消费动作。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>public interface Consumer&lt;T&gt; {
+    /**
+     * Performs this operation on the given argument.
+     *
+     * @param t the input argument
+     */
+    void accept(T t);
+}
 </code></pre>
 </div>
-<p>T reduce(T identity, BinaryOperator<T> accumulator);</T></p>
-<div class="highlighter-rouge"><pre class="highlight"><code>- 仅提供二元操作的方法引用，因此当流为空时，可能会返回空结果，因此方法签名的返回值为
-一个可选的`Optional&lt;T&gt;`。
+
+<h3 id="归约">归约</h3>
+<p>归约用来将一系列元素折叠成一个元素，比如对1至100的数字求和，通过归约操作，我们可以不断
+对累积值和流中的数字使用加法，从而完成所有数字的累加，最终累积值即为所有元素之和。归约
+操作通过<code class="highlighter-rouge">reduce()</code>方法实现。我们先来看一下它的用法。</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>List&lt;Integer&gt; numbers = Arrays.asList(3,4,5,1,2);
+int sum = numbers.stream().reduce(0, (a, b) -&gt; a + b);
+
+// 通过Integer提供的求和静态方法sum完成累加
+int sum2 = numbers.stream().reduce(0, Integer::sum);
 </code></pre>
 </div>
-<p>Optional<T> reduce(BinaryOperator<T> accumulator);</T></T></p>
-<div class="highlighter-rouge"><pre class="highlight"><code>同时，我们也可以通过归约来求出流中的最大值最小值，因为求出流中的最大值最小值也是分别
-两两比较流内的数字。下面例子可以计算如何求流的最大值，当流为空时，最大值为0。
+<p>该方法有如下两种重载：</p>
+<ul>
+  <li>提供初始值，以及一个二元操作的方法引用，上面例子使用的是该用法，通过提供初始值以及
+一个函数引用，我们向流提供一种累加的方法，即我们需要一个整数，初始值为0，
+通过<code class="highlighter-rouge">(a, b) -&gt; a + b</code>方法 （即<code class="highlighter-rouge">Integer::sum</code>）不断与流中的元素进行归约计算，
+最终得到累加和的输出。
+    <div class="highlighter-rouge"><pre class="highlight"><code>T reduce(T identity, BinaryOperator&lt;T&gt; accumulator);
 </code></pre>
-</div>
-<p>int max = numbers.stream().reduce(0, (a, b) -&gt; Integer.max(a, b));</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>这不一定是你期望的结果，因此可以采用`reduce()`方法的单参数重载方法。并根据流非空的情况
-进行相应处理。
+    </div>
+  </li>
+  <li>仅提供二元操作的方法引用，因此当流为空时，可能会返回空结果，因此方法签名的返回值为
+一个可选的<code class="highlighter-rouge">Optional&lt;T&gt;</code>。
+    <div class="highlighter-rouge"><pre class="highlight"><code>Optional&lt;T&gt; reduce(BinaryOperator&lt;T&gt; accumulator);
 </code></pre>
-</div>
-<p>Optional<Integer> min = numbers.stream().reduce(Integer::min);
-min.ifPresent(System.out::println);</Integer></p>
-<div class="highlighter-rouge"><pre class="highlight"><code>### 收集
+    </div>
+    <p>同时，我们也可以通过归约来求出流中的最大值最小值，因为求出流中的最大值最小值也是分别
+两两比较流内的数字。下面例子可以计算如何求流的最大值，当流为空时，最大值为0。</p>
+    <div class="highlighter-rouge"><pre class="highlight"><code>int max = numbers.stream().reduce(0, (a, b) -&gt; Integer.max(a, b));
 </code></pre>
-</div>
+    </div>
+    <p>这不一定是你期望的结果，因此可以采用<code class="highlighter-rouge">reduce()</code>方法的单参数重载方法。并根据流非空的情况
+进行相应处理。</p>
+    <div class="highlighter-rouge"><pre class="highlight"><code>Optional&lt;Integer&gt; min = numbers.stream().reduce(Integer::min);
+min.ifPresent(System.out::println);
+</code></pre>
+    </div>
+    <h3 id="收集">收集</h3>
+    <p>```</p>
+  </li>
+</ul>
 <R> R collect(Supplier<R> supplier,
                   BiConsumer&lt;R, ? super T&gt; accumulator,
                   BiConsumer&lt;R, R&gt; combiner);

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://0.0.0.0:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://0.0.0.0:4000/" rel="alternate" type="text/html" /><updated>2018-01-17T20:24:07+08:00</updated><id>http://0.0.0.0:4000/</id><title type="html">小笔记</title><subtitle>simple site to write note.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://0.0.0.0:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://0.0.0.0:4000/" rel="alternate" type="text/html" /><updated>2018-01-17T20:27:52+08:00</updated><id>http://0.0.0.0:4000/</id><title type="html">小笔记</title><subtitle>simple site to write note.
 </subtitle><author><name>grimkeke</name></author><entry><title type="html">Stream读书笔记</title><link href="http://0.0.0.0:4000/java8/2018/01/14/know-stream-api.html" rel="alternate" type="text/html" title="Stream读书笔记" /><published>2018-01-14T11:57:44+08:00</published><updated>2018-01-14T11:57:44+08:00</updated><id>http://0.0.0.0:4000/java8/2018/01/14/know-stream-api</id><content type="html" xml:base="http://0.0.0.0:4000/java8/2018/01/14/know-stream-api.html">&lt;p&gt;流（Stream）是一组Java API，通过声明式的方式处理数据集合（类似于SQL，通过编写查询
 的语句，而不是亲自实现一个查询功能）。对比之前面向集合，亲自来实现集合操作，通过流，
 开发者可以关注与实现的目的，而非实现操作本身。对比如下两段功能一样的代码，查询Dish列表
@@ -212,9 +212,12 @@ List&amp;lt;Integer&amp;gt; wordLengths = words.stream()
   .noneMatch(d -&amp;gt; d.getCalories() &amp;gt;= 1000); // 所有菜品卡路里是否不大于1000
 &lt;/code&gt;&lt;/pre&gt;
     &lt;/div&gt;
-    &lt;p&gt;这三个查找方法均使用到了短路优化，即在满足条件时，无需完整遍历流中所有元素，即可返回结果。&lt;/p&gt;
-    &lt;h3 id=&quot;查找元素&quot;&gt;查找元素&lt;/h3&gt;
   &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;这三个查找方法均使用到了短路优化，即在满足条件时，无需完整遍历流中所有元素，即可返回结果。&lt;/p&gt;
+&lt;h3 id=&quot;查找元素&quot;&gt;查找元素&lt;/h3&gt;
+&lt;ul&gt;
   &lt;li&gt;查找任意元素：&lt;code class=&quot;highlighter-rouge&quot;&gt;Optional&amp;lt;T&amp;gt; findAny();&lt;/code&gt;
     &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Optional&amp;lt;Dish&amp;gt; dish = menu.stream()
           .filter(Dish::isVegetarian).findAny();  // 找出菜单任意一个素菜
@@ -227,58 +230,64 @@ dish.ifPresent(d -&amp;gt; System.out.println(d.getName())); // 如果有素菜�
           .filter(Dish::isVegetarian).findFirst();  // 找出菜单第一个素菜
 &lt;/code&gt;&lt;/pre&gt;
     &lt;/div&gt;
-    &lt;p&gt;查找元素返回的是一个&lt;code class=&quot;highlighter-rouge&quot;&gt;Optional&amp;lt;T&amp;gt;&lt;/code&gt;类型，用于表示对象是否存在，通过&lt;code class=&quot;highlighter-rouge&quot;&gt;ifPresent(Consumer&amp;lt;? super T&amp;gt; consumer)&lt;/code&gt;
-方法可以传入一个消费者，当对象存在时，执行消费者的消费动作。
-```
-public interface Consumer&lt;T&gt; {
-  /**&lt;/T&gt;&lt;/p&gt;
-    &lt;ul&gt;
-      &lt;li&gt;Performs this operation on the given argument.
-   *&lt;/li&gt;
-      &lt;li&gt;@param t the input argument
-   */
-  void accept(T t);
-        &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;### 归约
-归约用来将一系列元素折叠成一个元素，比如对1至100的数字求和，通过归约操作，我们可以不断
-对累积值和流中的数字使用加法，从而完成所有数字的累加，最终累积值即为所有元素之和。归约
-操作通过`reduce()`方法实现。我们先来看一下它的用法。
-&lt;/code&gt;&lt;/pre&gt;
-        &lt;/div&gt;
-        &lt;p&gt;List&lt;Integer&gt; numbers = Arrays.asList(3,4,5,1,2);
-int sum = numbers.stream().reduce(0, (a, b) -&amp;gt; a + b);&lt;/Integer&gt;&lt;/p&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;// 通过Integer提供的求和静态方法sum完成累加
-int sum2 = numbers.stream().reduce(0, Integer::sum);&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;该方法有如下两种重载：
-- 提供初始值，以及一个二元操作的方法引用，上面例子使用的是该用法，通过提供初始值以及
-一个函数引用，我们向流提供一种累加的方法，即我们需要一个整数，初始值为0，通过`(a, b) -&amp;gt; a + b`方法
-（即`Integer::sum`）不断与流中的元素进行归约计算，最终得到累加和的输出。
+&lt;p&gt;查找元素返回的是一个&lt;code class=&quot;highlighter-rouge&quot;&gt;Optional&amp;lt;T&amp;gt;&lt;/code&gt;类型，用于表示对象是否存在，通过
+&lt;code class=&quot;highlighter-rouge&quot;&gt;ifPresent(Consumer&amp;lt;? super T&amp;gt; consumer)&lt;/code&gt;方法可以传入一个消费者，当对象存在时，执行消费者的消费动作。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public interface Consumer&amp;lt;T&amp;gt; {
+    /**
+     * Performs this operation on the given argument.
+     *
+     * @param t the input argument
+     */
+    void accept(T t);
+}
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
-&lt;p&gt;T reduce(T identity, BinaryOperator&lt;T&gt; accumulator);&lt;/T&gt;&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- 仅提供二元操作的方法引用，因此当流为空时，可能会返回空结果，因此方法签名的返回值为
-一个可选的`Optional&amp;lt;T&amp;gt;`。
+
+&lt;h3 id=&quot;归约&quot;&gt;归约&lt;/h3&gt;
+&lt;p&gt;归约用来将一系列元素折叠成一个元素，比如对1至100的数字求和，通过归约操作，我们可以不断
+对累积值和流中的数字使用加法，从而完成所有数字的累加，最终累积值即为所有元素之和。归约
+操作通过&lt;code class=&quot;highlighter-rouge&quot;&gt;reduce()&lt;/code&gt;方法实现。我们先来看一下它的用法。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;List&amp;lt;Integer&amp;gt; numbers = Arrays.asList(3,4,5,1,2);
+int sum = numbers.stream().reduce(0, (a, b) -&amp;gt; a + b);
+
+// 通过Integer提供的求和静态方法sum完成累加
+int sum2 = numbers.stream().reduce(0, Integer::sum);
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
-&lt;p&gt;Optional&lt;T&gt; reduce(BinaryOperator&lt;T&gt; accumulator);&lt;/T&gt;&lt;/T&gt;&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;同时，我们也可以通过归约来求出流中的最大值最小值，因为求出流中的最大值最小值也是分别
-两两比较流内的数字。下面例子可以计算如何求流的最大值，当流为空时，最大值为0。
+&lt;p&gt;该方法有如下两种重载：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;提供初始值，以及一个二元操作的方法引用，上面例子使用的是该用法，通过提供初始值以及
+一个函数引用，我们向流提供一种累加的方法，即我们需要一个整数，初始值为0，
+通过&lt;code class=&quot;highlighter-rouge&quot;&gt;(a, b) -&amp;gt; a + b&lt;/code&gt;方法 （即&lt;code class=&quot;highlighter-rouge&quot;&gt;Integer::sum&lt;/code&gt;）不断与流中的元素进行归约计算，
+最终得到累加和的输出。
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;T reduce(T identity, BinaryOperator&amp;lt;T&amp;gt; accumulator);
 &lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;p&gt;int max = numbers.stream().reduce(0, (a, b) -&amp;gt; Integer.max(a, b));&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;这不一定是你期望的结果，因此可以采用`reduce()`方法的单参数重载方法。并根据流非空的情况
-进行相应处理。
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;仅提供二元操作的方法引用，因此当流为空时，可能会返回空结果，因此方法签名的返回值为
+一个可选的&lt;code class=&quot;highlighter-rouge&quot;&gt;Optional&amp;lt;T&amp;gt;&lt;/code&gt;。
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Optional&amp;lt;T&amp;gt; reduce(BinaryOperator&amp;lt;T&amp;gt; accumulator);
 &lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;p&gt;Optional&lt;Integer&gt; min = numbers.stream().reduce(Integer::min);
-min.ifPresent(System.out::println);&lt;/Integer&gt;&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;### 收集
+    &lt;/div&gt;
+    &lt;p&gt;同时，我们也可以通过归约来求出流中的最大值最小值，因为求出流中的最大值最小值也是分别
+两两比较流内的数字。下面例子可以计算如何求流的最大值，当流为空时，最大值为0。&lt;/p&gt;
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;int max = numbers.stream().reduce(0, (a, b) -&amp;gt; Integer.max(a, b));
 &lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;p&gt;这不一定是你期望的结果，因此可以采用&lt;code class=&quot;highlighter-rouge&quot;&gt;reduce()&lt;/code&gt;方法的单参数重载方法。并根据流非空的情况
+进行相应处理。&lt;/p&gt;
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Optional&amp;lt;Integer&amp;gt; min = numbers.stream().reduce(Integer::min);
+min.ifPresent(System.out::println);
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+    &lt;h3 id=&quot;收集&quot;&gt;收集&lt;/h3&gt;
+    &lt;p&gt;```&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
 &lt;R&gt; R collect(Supplier&lt;R&gt; supplier,
                   BiConsumer&amp;lt;R, ? super T&amp;gt; accumulator,
                   BiConsumer&amp;lt;R, R&amp;gt; combiner);

@@ -214,6 +214,7 @@ menu.stream()
 menu.stream()
     .noneMatch(d -> d.getCalories() >= 1000); // 所有菜品卡路里是否不大于1000
 ```
+
 这三个查找方法均使用到了短路优化，即在满足条件时，无需完整遍历流中所有元素，即可返回结果。
 ### 查找元素
 - 查找任意元素：`Optional<T> findAny();`
@@ -227,8 +228,10 @@ dish.ifPresent(d -> System.out.println(d.getName())); // 如果有素菜则打�
 Optional<Dish> dish = menu.stream()
             .filter(Dish::isVegetarian).findFirst();  // 找出菜单第一个素菜
 ```
-查找元素返回的是一个`Optional<T>`类型，用于表示对象是否存在，通过`ifPresent(Consumer<? super T> consumer)`
-方法可以传入一个消费者，当对象存在时，执行消费者的消费动作。
+
+查找元素返回的是一个`Optional<T>`类型，用于表示对象是否存在，通过
+`ifPresent(Consumer<? super T> consumer)`方法可以传入一个消费者，当对象存在时，执行消费者的消费动作。
+
 ```
 public interface Consumer<T> {
     /**
@@ -237,7 +240,9 @@ public interface Consumer<T> {
      * @param t the input argument
      */
     void accept(T t);
+}
 ```
+
 ### 归约
 归约用来将一系列元素折叠成一个元素，比如对1至100的数字求和，通过归约操作，我们可以不断
 对累积值和流中的数字使用加法，从而完成所有数字的累加，最终累积值即为所有元素之和。归约
@@ -251,8 +256,9 @@ int sum2 = numbers.stream().reduce(0, Integer::sum);
 ```
 该方法有如下两种重载：
 - 提供初始值，以及一个二元操作的方法引用，上面例子使用的是该用法，通过提供初始值以及
-一个函数引用，我们向流提供一种累加的方法，即我们需要一个整数，初始值为0，通过`(a, b) -> a + b`方法
-（即`Integer::sum`）不断与流中的元素进行归约计算，最终得到累加和的输出。
+一个函数引用，我们向流提供一种累加的方法，即我们需要一个整数，初始值为0，
+通过`(a, b) -> a + b`方法 （即`Integer::sum`）不断与流中的元素进行归约计算，
+最终得到累加和的输出。
 ```
 T reduce(T identity, BinaryOperator<T> accumulator);
 ```
