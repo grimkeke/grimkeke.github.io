@@ -142,7 +142,7 @@ public interface Sample {
 通过接口默认方法，当我们需要对接口进行变更时，可以避免让接口的所有实现类以及子类进行修改
 和重新编译。接口实现类和其子类可以直接使用接口默认方法。
 
-#### 了解更多
+## 了解更多
 * [《java8实战》](https://book.douban.com/subject/26772632/)
 
 [url-invokedynamic]: http://www.infoq.com/cn/articles/Invokedynamic-Javas-secret-weapon

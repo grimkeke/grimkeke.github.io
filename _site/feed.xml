@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://0.0.0.0:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://0.0.0.0:4000/" rel="alternate" type="text/html" /><updated>2018-01-17T20:27:52+08:00</updated><id>http://0.0.0.0:4000/</id><title type="html">小笔记</title><subtitle>simple site to write note.
-</subtitle><author><name>grimkeke</name></author><entry><title type="html">Stream读书笔记</title><link href="http://0.0.0.0:4000/java8/2018/01/14/know-stream-api.html" rel="alternate" type="text/html" title="Stream读书笔记" /><published>2018-01-14T11:57:44+08:00</published><updated>2018-01-14T11:57:44+08:00</updated><id>http://0.0.0.0:4000/java8/2018/01/14/know-stream-api</id><content type="html" xml:base="http://0.0.0.0:4000/java8/2018/01/14/know-stream-api.html">&lt;p&gt;流（Stream）是一组Java API，通过声明式的方式处理数据集合（类似于SQL，通过编写查询
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://0.0.0.0:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://0.0.0.0:4000/" rel="alternate" type="text/html" /><updated>2018-02-13T15:47:59+08:00</updated><id>http://0.0.0.0:4000/</id><title type="html">小笔记</title><subtitle>simple site to write note.
+</subtitle><author><name>grimkeke</name></author><entry><title type="html">Stream读书笔记</title><link href="http://0.0.0.0:4000/java8/2018/01/14/know-stream-api.html" rel="alternate" type="text/html" title="Stream读书笔记" /><published>2018-01-14T11:57:44+08:00</published><updated>2018-01-14T11:57:44+08:00</updated><id>http://0.0.0.0:4000/java8/2018/01/14/know-stream-api</id><content type="html" xml:base="http://0.0.0.0:4000/java8/2018/01/14/know-stream-api.html">&lt;h2 id=&quot;什么是流&quot;&gt;什么是流&lt;/h2&gt;
+&lt;p&gt;流（Stream）是一组Java API，通过声明式的方式处理数据集合（类似于SQL，通过编写查询
 的语句，而不是亲自实现一个查询功能）。对比之前面向集合，亲自来实现集合操作，通过流，
 开发者可以关注与实现的目的，而非实现操作本身。对比如下两段功能一样的代码，查询Dish列表
 中卡路里小于400的菜品名称，并且根据菜品卡路里排序。java7的方法即为根据语义进行实现，
@@ -268,31 +269,128 @@ int sum2 = numbers.stream().reduce(0, Integer::sum);
 &lt;/code&gt;&lt;/pre&gt;
     &lt;/div&gt;
   &lt;/li&gt;
-  &lt;li&gt;仅提供二元操作的方法引用，因此当流为空时，可能会返回空结果，因此方法签名的返回值为
+  &lt;li&gt;仅提供二元操作的方法引用，当流为空时，可能会返回空结果，因此方法签名的返回值为
 一个可选的&lt;code class=&quot;highlighter-rouge&quot;&gt;Optional&amp;lt;T&amp;gt;&lt;/code&gt;。
     &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Optional&amp;lt;T&amp;gt; reduce(BinaryOperator&amp;lt;T&amp;gt; accumulator);
 &lt;/code&gt;&lt;/pre&gt;
     &lt;/div&gt;
-    &lt;p&gt;同时，我们也可以通过归约来求出流中的最大值最小值，因为求出流中的最大值最小值也是分别
-两两比较流内的数字。下面例子可以计算如何求流的最大值，当流为空时，最大值为0。&lt;/p&gt;
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;int max = numbers.stream().reduce(0, (a, b) -&amp;gt; Integer.max(a, b));
-&lt;/code&gt;&lt;/pre&gt;
-    &lt;/div&gt;
-    &lt;p&gt;这不一定是你期望的结果，因此可以采用&lt;code class=&quot;highlighter-rouge&quot;&gt;reduce()&lt;/code&gt;方法的单参数重载方法。并根据流非空的情况
-进行相应处理。&lt;/p&gt;
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Optional&amp;lt;Integer&amp;gt; min = numbers.stream().reduce(Integer::min);
-min.ifPresent(System.out::println);
-&lt;/code&gt;&lt;/pre&gt;
-    &lt;/div&gt;
-    &lt;h3 id=&quot;收集&quot;&gt;收集&lt;/h3&gt;
-    &lt;p&gt;```&lt;/p&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;p&gt;同时，我们也可以通过归约来求出流中的最大值最小值，因为求出流中的最大值最小值也是分别
+两两比较流内的数字。下面例子可以计算如何求流的最大值，当流为空时，最大值为0。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;int max = numbers.stream().reduce(0, (a, b) -&amp;gt; Integer.max(a, b));
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;这不一定是你期望的结果，因此可以采用&lt;code class=&quot;highlighter-rouge&quot;&gt;reduce()&lt;/code&gt;方法的单参数重载方法。并根据流非空的情况
+进行相应处理。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Optional&amp;lt;Integer&amp;gt; min = numbers.stream().reduce(Integer::min);
+min.ifPresent(System.out::println);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;关于流的操作，诸如map或者filter等操作会从输入中获取每一个元素进行处理，并且得到0个
+或者1个结果，这些操作一般是无状态的，因此可以很容易地并行化。而对于reduce、sum、max
+这类操作则需要内部维护一个状态来进行累计结果，因此被称为有状态，所以内部实现的并行策略
+会完全不一样，会使用分支/合并框架，即先讲数据分块，分块求和后，最后再将数据合并起来。
+对于sort或者distinct这类有状态的操作是通过一个输入流产出对应的输出流，每一个输入数据
+进入处理时还需要知道先前处理的历史，因此当流比较大或者无界时，有一些操作就会有问题，比如
+将一个质数流进行倒序（数学告诉我们，无穷多的质数无法倒序排序）&lt;/p&gt;
+&lt;h3 id=&quot;数值流&quot;&gt;数值流&lt;/h3&gt;
+&lt;p&gt;数值流是原始类型流的特化流，专门用于处理数值类型，如&lt;code class=&quot;highlighter-rouge&quot;&gt;InputStream&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;DoubleStream&lt;/code&gt;、
+&lt;code class=&quot;highlighter-rouge&quot;&gt;LongStream&lt;/code&gt;，使用数值流有两个原因，一是通用的流并没有提供数值操作才有的类似sum等方法，
+两个对象的sum并没有任何意义，虽然你可以使用&lt;code class=&quot;highlighter-rouge&quot;&gt;Stream&amp;lt;Integer&amp;gt;&lt;/code&gt;的方式处理数值，但是
+java的自动装箱机制会带来额外的开销，所以通过专门处理int、double和long型的数值流，
+可以带来更高的效率。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;IntStream intStream = menu.stream().mapToInt(Dish::getCalories);
+int calories = intStream.sum();
+
+// 数值流转换为对象流
+Stream&amp;lt;Integer&amp;gt; stream = intStream.boxed();
+
+// 数值型默认值，原生类型需使用对应的特异化Optional版本，之所以是需要OptionalInt
+// 是因为流可能为空，所以不一定存在最大值，所以如果没有最大值时，我们可以显式提供一个。
+OptionalInt maxCalories = intStream.max();
+int max = maxCalories.orElse(1);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;h4 id=&quot;数值流的范围&quot;&gt;数值流的范围&lt;/h4&gt;
+&lt;p&gt;通过&lt;code class=&quot;highlighter-rouge&quot;&gt;rangeClosed(m, n)&lt;/code&gt;方法生成从m到n（不包括n）范围的数值流。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;IntStream evenNumbers = IntStream.rangeClosed(1, 100)
+                                 .filter(n -&amp;gt; n % 2 == 0);
+System.out.println(evenNumbers.count());
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;h3 id=&quot;构建流&quot;&gt;构建流&lt;/h3&gt;
+&lt;p&gt;构建一个流有多种办法，通过从值序列、数组、文件来创建，甚至是生成函数来创建无限流。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;生成空流
+&lt;code class=&quot;highlighter-rouge&quot;&gt;Stream&amp;lt;String&amp;gt; emptyStream = Stream.empty();&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;显示创建流
+&lt;code class=&quot;highlighter-rouge&quot;&gt;Stream&amp;lt;String&amp;gt; stream = Stream.of(&quot;hello&quot;, &quot; world&quot;, &quot; my&quot;, &quot; friends&quot;);&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;由数组创建流
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;int[] numbers = {2, 3, 5, 7, 11, 13};
+int sum = Arrays.stream(numbers).sum();
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;由文件生成流
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 读取data.txt文件并计算使用了多少种不同的单词。
+Paths paths = Paths.get(&quot;path/data.txt&quot;);
+long uniqueWords = Files.lines(paths, Charset.defaultCharset())
+                      .flatMap(line -&amp;gt; Arrays.stream(line.split(&quot; &quot;)))
+                      .distinct()
+                      .count();
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;通过函数生成无限流
+通过&lt;code class=&quot;highlighter-rouge&quot;&gt;Stream.iterate&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;Stream.generate&lt;/code&gt;方法可以生成无限流，对于无限流的使用，一般
+会通过&lt;code class=&quot;highlighter-rouge&quot;&gt;limit(n)&lt;/code&gt;来限制流的大小，避免出现无穷打印。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;public static&amp;lt;T&amp;gt; Stream&amp;lt;T&amp;gt; iterate(final T seed, final UnaryOperator&amp;lt;T&amp;gt; f);&lt;/code&gt;
+iterate通过传入一个初始值seed和一元操作函数引用来迭代产生新的值，首先返回初始值seed，
+然后通过初始值seed输入函数引用f，生成第二个值s1，接着通过s1输入f，得到第三个值s2，
+以此类推。
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 打印10个偶数
+Stream.iterate(0, n -&amp;gt; n + 2)
+    .limit(10)
+    .forEach(System.out::println);
+// 创建斐波那契数列
+Stream.iterate(new int[]{0, 1}, t -&amp;gt; new int[]{t[1],t[0] + t[1]})
+    .limit(10)
+    .forEach(t -&amp;gt; System.out.println(&quot;(&quot; + t[0] + &quot;, &quot; + t[1] + &quot;)&quot;));
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+    &lt;p&gt;与&lt;code class=&quot;highlighter-rouge&quot;&gt;iterate&lt;/code&gt;方法类似，&lt;code class=&quot;highlighter-rouge&quot;&gt;generate&lt;/code&gt;方法是通过接收一个&lt;code class=&quot;highlighter-rouge&quot;&gt;Supplier&amp;lt;T&amp;gt;&lt;/code&gt;的函数引用来生成
+新的值。&lt;code class=&quot;highlighter-rouge&quot;&gt;public static&amp;lt;T&amp;gt; Stream&amp;lt;T&amp;gt; generate(Supplier&amp;lt;T&amp;gt; s);&lt;/code&gt;，通过方法引用，
+我们可以内部维护一个状态，在每次生成数据之后可以更新该状态，从而实现有状态的供应源。
+但是在并行流中使用有状态的流是不安全的，应答尽量避免。
+```
+// 产生10个随机数
+Stream.generate(Math::random)
+    .limit(10)
+    .forEach(System.out::println);&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;// 避免装箱操作，通过DoubleStream实现
+DoubleStream.generate(Math::random)
+            .limit(5)
+            .forEach(System.out::println);&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;### 收集
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 &lt;R&gt; R collect(Supplier&lt;R&gt; supplier,
                   BiConsumer&amp;lt;R, ? super T&amp;gt; accumulator,
                   BiConsumer&amp;lt;R, R&amp;gt; combiner);
 ```
-&lt;/R&gt;&lt;/R&gt;</content><author><name>grimkeke</name></author><summary type="html">流（Stream）是一组Java API，通过声明式的方式处理数据集合（类似于SQL，通过编写查询 的语句，而不是亲自实现一个查询功能）。对比之前面向集合，亲自来实现集合操作，通过流， 开发者可以关注与实现的目的，而非实现操作本身。对比如下两段功能一样的代码，查询Dish列表 中卡路里小于400的菜品名称，并且根据菜品卡路里排序。java7的方法即为根据语义进行实现， 即首先遍历所有的菜品，找出小于400卡路里的菜品添加到临时列表，进行排序，然后再创建一个 列表用于提取菜品的名称。 ``` public List getLowCaloricDishesNamesInJava7(List dishes){ List lowCaloricDishes = new ArrayList&amp;lt;&amp;gt;(); for(Dish d: dishes){ if(d.getCalories() &amp;lt; 400){ lowCaloricDishes.add(d); } }</summary></entry><entry><title type="html">Hello World To Java8</title><link href="http://0.0.0.0:4000/java8/2018/01/12/hello-world-to-java8.html" rel="alternate" type="text/html" title="Hello World To Java8" /><published>2018-01-12T11:57:44+08:00</published><updated>2018-01-12T11:57:44+08:00</updated><id>http://0.0.0.0:4000/java8/2018/01/12/hello-world-to-java8</id><content type="html" xml:base="http://0.0.0.0:4000/java8/2018/01/12/hello-world-to-java8.html">&lt;h2 id=&quot;为什么用java8&quot;&gt;为什么用java8&lt;/h2&gt;
+
+### 附录A 中间操作和终端操作表
+| 操作      | 类型            | 返回类型           | 使用的类型/函数式接口 | 函数描述符    |
+| -------- | --------------- | ----------------- | ------------------ | ------------ |
+| filter   | 中间             | `Stream&lt;T&gt;`       | `Predicate&lt;T&gt;`     | T -&amp;gt; boolean |
+| distinct | 中间（有状态-无界）| `Stream&lt;T&gt;`       |                    |              |
+&lt;/T&gt;&lt;/T&gt;&lt;/T&gt;&lt;/R&gt;&lt;/R&gt;</content><author><name>grimkeke</name></author><summary type="html">什么是流 流（Stream）是一组Java API，通过声明式的方式处理数据集合（类似于SQL，通过编写查询 的语句，而不是亲自实现一个查询功能）。对比之前面向集合，亲自来实现集合操作，通过流， 开发者可以关注与实现的目的，而非实现操作本身。对比如下两段功能一样的代码，查询Dish列表 中卡路里小于400的菜品名称，并且根据菜品卡路里排序。java7的方法即为根据语义进行实现， 即首先遍历所有的菜品，找出小于400卡路里的菜品添加到临时列表，进行排序，然后再创建一个 列表用于提取菜品的名称。 ``` public List getLowCaloricDishesNamesInJava7(List dishes){ List lowCaloricDishes = new ArrayList&amp;lt;&amp;gt;(); for(Dish d: dishes){ if(d.getCalories() &amp;lt; 400){ lowCaloricDishes.add(d); } }</summary></entry><entry><title type="html">Hello World To Java8</title><link href="http://0.0.0.0:4000/java8/2018/01/12/hello-world-to-java8.html" rel="alternate" type="text/html" title="Hello World To Java8" /><published>2018-01-12T11:57:44+08:00</published><updated>2018-01-12T11:57:44+08:00</updated><id>http://0.0.0.0:4000/java8/2018/01/12/hello-world-to-java8</id><content type="html" xml:base="http://0.0.0.0:4000/java8/2018/01/12/hello-world-to-java8.html">&lt;h2 id=&quot;为什么用java8&quot;&gt;为什么用java8&lt;/h2&gt;
 &lt;p&gt;在了解和学习了java8之后，我发现java8带来的优势和所提升的效率，比学习它的成本要多得多，
 所以在此向大家推荐使用java8的新特性：&lt;/p&gt;
 &lt;ol&gt;
@@ -431,7 +529,7 @@ List&amp;lt;Apple&amp;gt; bigApples = apples.stream()
 &lt;p&gt;通过接口默认方法，当我们需要对接口进行变更时，可以避免让接口的所有实现类以及子类进行修改
 和重新编译。接口实现类和其子类可以直接使用接口默认方法。&lt;/p&gt;
 
-&lt;h4 id=&quot;了解更多&quot;&gt;了解更多&lt;/h4&gt;
+&lt;h2 id=&quot;了解更多&quot;&gt;了解更多&lt;/h2&gt;
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;https://book.douban.com/subject/26772632/&quot;&gt;《java8实战》&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;</content><author><name>grimkeke</name></author><summary type="html">为什么用java8 在了解和学习了java8之后，我发现java8带来的优势和所提升的效率，比学习它的成本要多得多， 所以在此向大家推荐使用java8的新特性： 通过方法参数传递代码块的能力以及使用lambda匿名函数替代实现匿名类。 新的流（Stream）API，提供了一种高层次集合操作方法，并带来了随手可得的并行能力。 为接口提供默认方法的能力，为扩展接口带来了福音。</summary></entry><entry><title type="html">How To Change Default JRE In IntelliJ Idea</title><link href="http://0.0.0.0:4000/intellij/2017/05/09/how-to-change-default-jre-in-intellij-idea.html" rel="alternate" type="text/html" title="How To Change Default JRE In IntelliJ Idea" /><published>2017-05-09T12:51:44+08:00</published><updated>2017-05-09T12:51:44+08:00</updated><id>http://0.0.0.0:4000/intellij/2017/05/09/how-to-change-default-jre-in-intellij-idea</id><content type="html" xml:base="http://0.0.0.0:4000/intellij/2017/05/09/how-to-change-default-jre-in-intellij-idea.html">&lt;p&gt;Intellij IDEA 默认情况下，使用的jdk的版本是1.6，当第一次启动IDEA的时候，如果系统中未安装jdk，则系统会自动到苹果官网下载jdk安装文件。如果你的系 统已经安装了jdk1.7或是更高的版本，同样首次打开IDEA的时候要求你安装苹果官网jdk1.6。&lt;/p&gt;

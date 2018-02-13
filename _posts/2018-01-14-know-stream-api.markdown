@@ -4,6 +4,7 @@ title:  Stream读书笔记
 date:   2018-01-14 11:57:44 +0800
 categories: java8
 ---
+## 什么是流
 流（Stream）是一组Java API，通过声明式的方式处理数据集合（类似于SQL，通过编写查询
 的语句，而不是亲自实现一个查询功能）。对比之前面向集合，亲自来实现集合操作，通过流，
 开发者可以关注与实现的目的，而非实现操作本身。对比如下两段功能一样的代码，查询Dish列表
@@ -262,11 +263,12 @@ int sum2 = numbers.stream().reduce(0, Integer::sum);
 ```
 T reduce(T identity, BinaryOperator<T> accumulator);
 ```
-- 仅提供二元操作的方法引用，因此当流为空时，可能会返回空结果，因此方法签名的返回值为
+- 仅提供二元操作的方法引用，当流为空时，可能会返回空结果，因此方法签名的返回值为
 一个可选的`Optional<T>`。
 ```
 Optional<T> reduce(BinaryOperator<T> accumulator);
 ```
+
 同时，我们也可以通过归约来求出流中的最大值最小值，因为求出流中的最大值最小值也是分别
 两两比较流内的数字。下面例子可以计算如何求流的最大值，当流为空时，最大值为0。
 ```
@@ -278,9 +280,100 @@ int max = numbers.stream().reduce(0, (a, b) -> Integer.max(a, b));
 Optional<Integer> min = numbers.stream().reduce(Integer::min);
 min.ifPresent(System.out::println);
 ```
+
+关于流的操作，诸如map或者filter等操作会从输入中获取每一个元素进行处理，并且得到0个
+或者1个结果，这些操作一般是无状态的，因此可以很容易地并行化。而对于reduce、sum、max
+这类操作则需要内部维护一个状态来进行累计结果，因此被称为有状态，所以内部实现的并行策略
+会完全不一样，会使用分支/合并框架，即先讲数据分块，分块求和后，最后再将数据合并起来。
+对于sort或者distinct这类有状态的操作是通过一个输入流产出对应的输出流，每一个输入数据
+进入处理时还需要知道先前处理的历史，因此当流比较大或者无界时，有一些操作就会有问题，比如
+将一个质数流进行倒序（数学告诉我们，无穷多的质数无法倒序排序）
+### 数值流
+数值流是原始类型流的特化流，专门用于处理数值类型，如`InputStream`、`DoubleStream`、
+`LongStream`，使用数值流有两个原因，一是通用的流并没有提供数值操作才有的类似sum等方法，
+两个对象的sum并没有任何意义，虽然你可以使用`Stream<Integer>`的方式处理数值，但是
+java的自动装箱机制会带来额外的开销，所以通过专门处理int、double和long型的数值流，
+可以带来更高的效率。
+```
+IntStream intStream = menu.stream().mapToInt(Dish::getCalories);
+int calories = intStream.sum();
+
+// 数值流转换为对象流
+Stream<Integer> stream = intStream.boxed();
+
+// 数值型默认值，原生类型需使用对应的特异化Optional版本，之所以是需要OptionalInt
+// 是因为流可能为空，所以不一定存在最大值，所以如果没有最大值时，我们可以显式提供一个。
+OptionalInt maxCalories = intStream.max();
+int max = maxCalories.orElse(1);
+```
+#### 数值流的范围
+通过`rangeClosed(m, n)`方法生成从m到n（不包括n）范围的数值流。
+```
+IntStream evenNumbers = IntStream.rangeClosed(1, 100)
+                                 .filter(n -> n % 2 == 0);
+System.out.println(evenNumbers.count());
+```
+### 构建流
+构建一个流有多种办法，通过从值序列、数组、文件来创建，甚至是生成函数来创建无限流。
+- 生成空流
+```Stream<String> emptyStream = Stream.empty();```
+- 显示创建流
+```Stream<String> stream = Stream.of("hello", " world", " my", " friends");```
+- 由数组创建流
+```
+int[] numbers = {2, 3, 5, 7, 11, 13};
+int sum = Arrays.stream(numbers).sum();
+```
+- 由文件生成流
+```
+// 读取data.txt文件并计算使用了多少种不同的单词。
+Paths paths = Paths.get("path/data.txt");
+long uniqueWords = Files.lines(paths, Charset.defaultCharset())
+                        .flatMap(line -> Arrays.stream(line.split(" ")))
+                        .distinct()
+                        .count();
+```
+- 通过函数生成无限流
+通过`Stream.iterate`和`Stream.generate`方法可以生成无限流，对于无限流的使用，一般
+会通过`limit(n)`来限制流的大小，避免出现无穷打印。
+`public static<T> Stream<T> iterate(final T seed, final UnaryOperator<T> f);`
+iterate通过传入一个初始值seed和一元操作函数引用来迭代产生新的值，首先返回初始值seed，
+然后通过初始值seed输入函数引用f，生成第二个值s1，接着通过s1输入f，得到第三个值s2，
+以此类推。
+```
+// 打印10个偶数
+Stream.iterate(0, n -> n + 2)
+      .limit(10)
+      .forEach(System.out::println);
+// 创建斐波那契数列
+Stream.iterate(new int[]{0, 1}, t -> new int[]{t[1],t[0] + t[1]})
+      .limit(10)
+      .forEach(t -> System.out.println("(" + t[0] + ", " + t[1] + ")"));
+```
+与`iterate`方法类似，`generate`方法是通过接收一个`Supplier<T>`的函数引用来生成
+新的值。`public static<T> Stream<T> generate(Supplier<T> s);`，通过方法引用，
+我们可以内部维护一个状态，在每次生成数据之后可以更新该状态，从而实现有状态的供应源。
+但是在并行流中使用有状态的流是不安全的，应答尽量避免。
+```
+// 产生10个随机数
+Stream.generate(Math::random)
+      .limit(10)
+      .forEach(System.out::println);
+
+// 避免装箱操作，通过DoubleStream实现
+DoubleStream.generate(Math::random)
+            .limit(5)
+            .forEach(System.out::println);
+```
 ### 收集
 ```
 <R> R collect(Supplier<R> supplier,
                   BiConsumer<R, ? super T> accumulator,
                   BiConsumer<R, R> combiner);
 ```
+
+### 附录A 中间操作和终端操作表
+| 操作      | 类型            | 返回类型           | 使用的类型/函数式接口 | 函数描述符    |
+| -------- | --------------- | ----------------- | ------------------ | ------------ |
+| filter   | 中间             | `Stream<T>`       | `Predicate<T>`     | T -> boolean |
+| distinct | 中间（有状态-无界）| `Stream<T>`       |                    |              |
