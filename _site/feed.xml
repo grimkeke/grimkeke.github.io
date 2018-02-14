@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://0.0.0.0:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://0.0.0.0:4000/" rel="alternate" type="text/html" /><updated>2018-02-13T15:47:59+08:00</updated><id>http://0.0.0.0:4000/</id><title type="html">小笔记</title><subtitle>simple site to write note.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://0.0.0.0:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://0.0.0.0:4000/" rel="alternate" type="text/html" /><updated>2018-02-14T14:23:44+08:00</updated><id>http://0.0.0.0:4000/</id><title type="html">小笔记</title><subtitle>simple site to write note.
 </subtitle><author><name>grimkeke</name></author><entry><title type="html">Stream读书笔记</title><link href="http://0.0.0.0:4000/java8/2018/01/14/know-stream-api.html" rel="alternate" type="text/html" title="Stream读书笔记" /><published>2018-01-14T11:57:44+08:00</published><updated>2018-01-14T11:57:44+08:00</updated><id>http://0.0.0.0:4000/java8/2018/01/14/know-stream-api</id><content type="html" xml:base="http://0.0.0.0:4000/java8/2018/01/14/know-stream-api.html">&lt;h2 id=&quot;什么是流&quot;&gt;什么是流&lt;/h2&gt;
 &lt;p&gt;流（Stream）是一组Java API，通过声明式的方式处理数据集合（类似于SQL，通过编写查询
 的语句，而不是亲自实现一个查询功能）。对比之前面向集合，亲自来实现集合操作，通过流，
@@ -251,7 +251,7 @@ dish.ifPresent(d -&amp;gt; System.out.println(d.getName())); // 如果有素菜�
 &lt;h3 id=&quot;归约&quot;&gt;归约&lt;/h3&gt;
 &lt;p&gt;归约用来将一系列元素折叠成一个元素，比如对1至100的数字求和，通过归约操作，我们可以不断
 对累积值和流中的数字使用加法，从而完成所有数字的累加，最终累积值即为所有元素之和。归约
-操作通过&lt;code class=&quot;highlighter-rouge&quot;&gt;reduce()&lt;/code&gt;方法实现。我们先来看一下它的用法。&lt;/p&gt;
+操作通过&lt;code class=&quot;highlighter-rouge&quot;&gt;Stream.reduce&lt;/code&gt;方法实现。我们先来看一下它的用法。&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;List&amp;lt;Integer&amp;gt; numbers = Arrays.asList(3,4,5,1,2);
 int sum = numbers.stream().reduce(0, (a, b) -&amp;gt; a + b);
 
@@ -259,23 +259,37 @@ int sum = numbers.stream().reduce(0, (a, b) -&amp;gt; a + b);
 int sum2 = numbers.stream().reduce(0, Integer::sum);
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
-&lt;p&gt;该方法有如下两种重载：&lt;/p&gt;
+&lt;p&gt;该方法有如下三种重载：&lt;/p&gt;
 &lt;ul&gt;
-  &lt;li&gt;提供初始值，以及一个二元操作的方法引用，上面例子使用的是该用法，通过提供初始值以及
-一个函数引用，我们向流提供一种累加的方法，即我们需要一个整数，初始值为0，
-通过&lt;code class=&quot;highlighter-rouge&quot;&gt;(a, b) -&amp;gt; a + b&lt;/code&gt;方法 （即&lt;code class=&quot;highlighter-rouge&quot;&gt;Integer::sum&lt;/code&gt;）不断与流中的元素进行归约计算，
-最终得到累加和的输出。
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;T reduce(T identity, BinaryOperator&amp;lt;T&amp;gt; accumulator);
-&lt;/code&gt;&lt;/pre&gt;
-    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;仅提供二元操作的方法引用，当流为空时，可能会返回空结果，因此方法签名的返回值为
-一个可选的&lt;code class=&quot;highlighter-rouge&quot;&gt;Optional&amp;lt;T&amp;gt;&lt;/code&gt;。
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Optional&amp;lt;T&amp;gt; reduce(BinaryOperator&amp;lt;T&amp;gt; accumulator);
-&lt;/code&gt;&lt;/pre&gt;
-    &lt;/div&gt;
-  &lt;/li&gt;
+  &lt;li&gt;提供初始值，以及一个二元操作的方法引用&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;p&gt;上面例子使用的是该用法，通过提供初始值以及一个函数引用，我们向流提供一种累加的方法，
+即我们需要一个整数，初始值为0， 通过&lt;code class=&quot;highlighter-rouge&quot;&gt;(a, b) -&amp;gt; a + b&lt;/code&gt;方法（即&lt;code class=&quot;highlighter-rouge&quot;&gt;Integer::sum&lt;/code&gt;）
+不断与流中的元素进行归约计算，最终得到累加和的输出。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;T reduce(T identity, BinaryOperator&amp;lt;T&amp;gt; accumulator);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;ul&gt;
+  &lt;li&gt;仅提供二元操作的方法引用&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;当流为空时，可能会返回空结果，因此方法签名的返回值为一个可选的&lt;code class=&quot;highlighter-rouge&quot;&gt;Optional&amp;lt;T&amp;gt;&lt;/code&gt;。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Optional&amp;lt;T&amp;gt; reduce(BinaryOperator&amp;lt;T&amp;gt; accumulator);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;ul&gt;
+  &lt;li&gt;更加通用的流归约方法&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;上面两个方法都能通过下面三个参数的方法实现，首先U是我们归约期望得到的目标值类型，
+第一个参数给了一个起始值，当流为空的时候用作默认值返回；第二个参数是一个二元函数，
+用来将归约中间值以及流中的元素转换为目标值；第三个参数用来对归约中间值以及第二步得到的
+目标类型值进行归约计算。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;U&amp;gt; U reduce(U identity, BiFunction&amp;lt;U, ? super T, U&amp;gt; accumulator,
+                 BinaryOperator&amp;lt;U&amp;gt; combiner);&lt;/code&gt;&lt;/p&gt;
 
 &lt;p&gt;同时，我们也可以通过归约来求出流中的最大值最小值，因为求出流中的最大值最小值也是分别
 两两比较流内的数字。下面例子可以计算如何求流的最大值，当流为空时，最大值为0。&lt;/p&gt;
@@ -296,6 +310,7 @@ min.ifPresent(System.out::println);
 对于sort或者distinct这类有状态的操作是通过一个输入流产出对应的输出流，每一个输入数据
 进入处理时还需要知道先前处理的历史，因此当流比较大或者无界时，有一些操作就会有问题，比如
 将一个质数流进行倒序（数学告诉我们，无穷多的质数无法倒序排序）&lt;/p&gt;
+
 &lt;h3 id=&quot;数值流&quot;&gt;数值流&lt;/h3&gt;
 &lt;p&gt;数值流是原始类型流的特化流，专门用于处理数值类型，如&lt;code class=&quot;highlighter-rouge&quot;&gt;InputStream&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;DoubleStream&lt;/code&gt;、
 &lt;code class=&quot;highlighter-rouge&quot;&gt;LongStream&lt;/code&gt;，使用数值流有两个原因，一是通用的流并没有提供数值操作才有的类似sum等方法，
@@ -314,6 +329,7 @@ OptionalInt maxCalories = intStream.max();
 int max = maxCalories.orElse(1);
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
+
 &lt;h4 id=&quot;数值流的范围&quot;&gt;数值流的范围&lt;/h4&gt;
 &lt;p&gt;通过&lt;code class=&quot;highlighter-rouge&quot;&gt;rangeClosed(m, n)&lt;/code&gt;方法生成从m到n（不包括n）范围的数值流。&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;IntStream evenNumbers = IntStream.rangeClosed(1, 100)
@@ -324,73 +340,391 @@ System.out.println(evenNumbers.count());
 &lt;h3 id=&quot;构建流&quot;&gt;构建流&lt;/h3&gt;
 &lt;p&gt;构建一个流有多种办法，通过从值序列、数组、文件来创建，甚至是生成函数来创建无限流。&lt;/p&gt;
 &lt;ul&gt;
-  &lt;li&gt;生成空流
-&lt;code class=&quot;highlighter-rouge&quot;&gt;Stream&amp;lt;String&amp;gt; emptyStream = Stream.empty();&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;显示创建流
-&lt;code class=&quot;highlighter-rouge&quot;&gt;Stream&amp;lt;String&amp;gt; stream = Stream.of(&quot;hello&quot;, &quot; world&quot;, &quot; my&quot;, &quot; friends&quot;);&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;由数组创建流
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;int[] numbers = {2, 3, 5, 7, 11, 13};
+  &lt;li&gt;生成空流&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Stream&amp;lt;String&amp;gt; emptyStream = Stream.empty();&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;显式创建流&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Stream&amp;lt;String&amp;gt; stream = Stream.of(&quot;hello&quot;, &quot; world&quot;, &quot; my&quot;, &quot; friends&quot;);&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;由数组创建流&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;int[] numbers = {2, 3, 5, 7, 11, 13};
 int sum = Arrays.stream(numbers).sum();
 &lt;/code&gt;&lt;/pre&gt;
-    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;由文件生成流
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 读取data.txt文件并计算使用了多少种不同的单词。
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;由文件生成流&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 读取data.txt文件并计算使用了多少种不同的单词。
 Paths paths = Paths.get(&quot;path/data.txt&quot;);
 long uniqueWords = Files.lines(paths, Charset.defaultCharset())
-                      .flatMap(line -&amp;gt; Arrays.stream(line.split(&quot; &quot;)))
-                      .distinct()
-                      .count();
+                        .flatMap(line -&amp;gt; Arrays.stream(line.split(&quot; &quot;)))
+                        .distinct()
+                        .count();
 &lt;/code&gt;&lt;/pre&gt;
-    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;通过函数生成无限流
-通过&lt;code class=&quot;highlighter-rouge&quot;&gt;Stream.iterate&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;Stream.generate&lt;/code&gt;方法可以生成无限流，对于无限流的使用，一般
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;通过函数生成无限流&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;通过&lt;code class=&quot;highlighter-rouge&quot;&gt;Stream.iterate&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;Stream.generate&lt;/code&gt;方法可以生成无限流，对于无限流的使用，一般
 会通过&lt;code class=&quot;highlighter-rouge&quot;&gt;limit(n)&lt;/code&gt;来限制流的大小，避免出现无穷打印。
 &lt;code class=&quot;highlighter-rouge&quot;&gt;public static&amp;lt;T&amp;gt; Stream&amp;lt;T&amp;gt; iterate(final T seed, final UnaryOperator&amp;lt;T&amp;gt; f);&lt;/code&gt;
 iterate通过传入一个初始值seed和一元操作函数引用来迭代产生新的值，首先返回初始值seed，
 然后通过初始值seed输入函数引用f，生成第二个值s1，接着通过s1输入f，得到第三个值s2，
-以此类推。
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 打印10个偶数
+以此类推。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 打印10个偶数
 Stream.iterate(0, n -&amp;gt; n + 2)
-    .limit(10)
-    .forEach(System.out::println);
+      .limit(10)
+      .forEach(System.out::println);
 // 创建斐波那契数列
 Stream.iterate(new int[]{0, 1}, t -&amp;gt; new int[]{t[1],t[0] + t[1]})
-    .limit(10)
-    .forEach(t -&amp;gt; System.out.println(&quot;(&quot; + t[0] + &quot;, &quot; + t[1] + &quot;)&quot;));
-&lt;/code&gt;&lt;/pre&gt;
-    &lt;/div&gt;
-    &lt;p&gt;与&lt;code class=&quot;highlighter-rouge&quot;&gt;iterate&lt;/code&gt;方法类似，&lt;code class=&quot;highlighter-rouge&quot;&gt;generate&lt;/code&gt;方法是通过接收一个&lt;code class=&quot;highlighter-rouge&quot;&gt;Supplier&amp;lt;T&amp;gt;&lt;/code&gt;的函数引用来生成
-新的值。&lt;code class=&quot;highlighter-rouge&quot;&gt;public static&amp;lt;T&amp;gt; Stream&amp;lt;T&amp;gt; generate(Supplier&amp;lt;T&amp;gt; s);&lt;/code&gt;，通过方法引用，
-我们可以内部维护一个状态，在每次生成数据之后可以更新该状态，从而实现有状态的供应源。
-但是在并行流中使用有状态的流是不安全的，应答尽量避免。
-```
-// 产生10个随机数
-Stream.generate(Math::random)
-    .limit(10)
-    .forEach(System.out::println);&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;// 避免装箱操作，通过DoubleStream实现
-DoubleStream.generate(Math::random)
-            .limit(5)
-            .forEach(System.out::println);&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;### 收集
+      .limit(10)
+      .forEach(t -&amp;gt; System.out.println(&quot;(&quot; + t[0] + &quot;, &quot; + t[1] + &quot;)&quot;));
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
-&lt;R&gt; R collect(Supplier&lt;R&gt; supplier,
+
+&lt;p&gt;与&lt;code class=&quot;highlighter-rouge&quot;&gt;iterate&lt;/code&gt;方法类似，&lt;code class=&quot;highlighter-rouge&quot;&gt;generate&lt;/code&gt;方法是通过接收一个&lt;code class=&quot;highlighter-rouge&quot;&gt;Supplier&amp;lt;T&amp;gt;&lt;/code&gt;的函数引用来生成
+新的值。&lt;code class=&quot;highlighter-rouge&quot;&gt;public static&amp;lt;T&amp;gt; Stream&amp;lt;T&amp;gt; generate(Supplier&amp;lt;T&amp;gt; s);&lt;/code&gt;，通过方法引用，
+我们可以内部维护一个状态，在每次生成数据之后可以更新该状态，从而实现有状态的供应源。
+但是在并行流中使用有状态的流是不安全的，应答尽量避免。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 产生10个随机数
+Stream.generate(Math::random)
+      .limit(10)
+      .forEach(System.out::println);
+
+// 避免装箱操作，通过DoubleStream实现
+DoubleStream.generate(Math::random)
+            .limit(5)
+            .forEach(System.out::println);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;收集&quot;&gt;收集&lt;/h3&gt;
+&lt;p&gt;收集器是一个将数据按指定需求描述进行处理的函数式接口。通过收集器，你可以只通过描述数据
+如何收集，而避免亲自实现如何收集。首先看一个根据货币类型分组交易的问题，使用原始的
+迭代编码和使用收集器的简洁编码。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 通过迭代的方式以Currency为键，对Transaction进行分组
+private static void groupImperatively() {
+    Map&amp;lt;Currency, List&amp;lt;Transaction&amp;gt;&amp;gt; transByCurrencies = new HashMap&amp;lt;&amp;gt;();
+    for (Transaction transaction : transactions) {
+        Currency currency = transaction.getCurrency();
+        List&amp;lt;Transaction&amp;gt; transForCurrency = transByCurrencies.get(currency);
+        if (transForCurrency == null) {
+                transForCurrency = new ArrayList&amp;lt;&amp;gt;();
+            transByCurrencies.put(currency, transForCurrency);
+        }
+        transForCurrency.add(transaction);
+    }
+    System.out.println(transByCurrencies);
+}
+
+// 通过java8收集器进行分组
+private static void groupFunctionally() {
+    Map&amp;lt;Currency, List&amp;lt;Transaction&amp;gt;&amp;gt; transByCurrencies = transactions
+        .stream()
+        .collect(Collectors.groupingBy(Transaction::getCurrency));
+    System.out.println(transByCurrencies);
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;从上面的对比看到使用函数式风格的收集器可以更好地维护代码，特别是当还有子分组的情况下，
+迭代式的实现子分组会加倍复杂化代码。而通过收集器，则只需要增加一个子收集器即可。可以
+更好地复合和重用。而其中所有的收集器，都通过工厂类&lt;code class=&quot;highlighter-rouge&quot;&gt;Collectors&lt;/code&gt;提供。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;归约&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;获取菜单中有多少种菜&lt;code class=&quot;highlighter-rouge&quot;&gt;menu.stream().collect(Collectors.counting());&lt;/code&gt;
+也可以采用下面更为直接的形式&lt;code class=&quot;highlighter-rouge&quot;&gt;menu.stream().count();&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;最大最小值&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;通过传入一个比较器，使用工厂类的&lt;code class=&quot;highlighter-rouge&quot;&gt;maxBy&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;minBy&lt;/code&gt;方法查找最高或最低卡路里的菜肴。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 获取最高热量的菜品
+Comparator&amp;lt;Dish&amp;gt; comparator = Comparator.comparingInt(Dish::getCalories);
+Optional&amp;lt;Dish&amp;gt; mostCaloriesDish = menu.stream()
+                                .collect(Collectors.maxBy(comparator));
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;汇总&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Collectors.summingInt&lt;/code&gt;方法返回一个”将对象转换为int的函数”的收集器，通过该收集器
+来计算菜单中所有菜品的总热量。针对其他原生类型还提供了&lt;code class=&quot;highlighter-rouge&quot;&gt;summingLong&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;summingDouble&lt;/code&gt;
+方法。而汇总还包含了求平均数&lt;code class=&quot;highlighter-rouge&quot;&gt;averagingInt&lt;/code&gt;方法和对应long、double类型特异方法。为了
+能够在一次计算中获取包含最大值、最小值、平均值等在内的所有值，Collectors还提供了
+&lt;code class=&quot;highlighter-rouge&quot;&gt;summarizingInt&lt;/code&gt;方法，用于一次性获取对应规约汇总值。同提供long、double特异方法。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 对菜单所有菜品总热量求和
+int total = menu.stream().collect(Collectors.summingInt(Dish::getCalories));
+
+// 平均热量
+int average = menu.stream().collect(averagingInt(Dish::getCalories));
+
+// 关于热量的统计值
+IntSummaryStatistics statistics = menu.stream()
+                        .collect(summarizingInt(Dish::getCalories));
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;连接字符串&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;连接字符串会将流中的所有元素通过指定的分隔符，串成一个字符串。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 根据逗号分隔所有菜品的菜名
+String shortMenu = menu.stream().map(Dish::getName).collect(joining(&quot;, &quot;));
+
+// 如果Dish类中有一个toString方法来返回菜名，则无需通过菜品获取名称的映射
+String shortMenu = menu.stream().collect(joining());
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;广义的归约汇总&quot;&gt;广义的归约汇总&lt;/h4&gt;
+&lt;p&gt;上述我们讨论的所有收集器，都是一个&lt;code class=&quot;highlighter-rouge&quot;&gt;Collectors.reducing&lt;/code&gt;工厂方法定义的归约过程的
+特殊情况。&lt;code class=&quot;highlighter-rouge&quot;&gt;reducing&lt;/code&gt;方法是之前介绍的特殊情况的一般化。可以说，前面介绍的案例仅仅是
+为了方便程序员开发而已，但是方便开发人员和可读性可是头等大事！，所以我们可以通过一般
+化方法计算菜单的总热量。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//
+int totalCalories = menu.stream()
+              .collect(reducing(0, Dish::getCalories, Integer::sum)));
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;reducing共有三种重载方法，上面使用的是最基础的方法，首先给定一个起始值0，当流为空的
+时候可作为默认值直接返回；第二个参数提供一个Function，用于将流中的数据类型转换为需要
+归约的目标数据类型，如将Dish类型转换为int型；第三个参数则是用来进行归约的二元运算函数，
+通过起始值0和流中第一个元素的转换类型，进行二元运算得到新值，然后将新值与流中的下一个
+元素的转换值，继续进行归约运算，直到流中元素完成归约计算。下面是&lt;code class=&quot;highlighter-rouge&quot;&gt;reducing&lt;/code&gt;的定义。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/*
+ * @param &amp;lt;T&amp;gt; the type of the input elements
+ * @param &amp;lt;U&amp;gt; the type of the mapped values
+ * @param identity the identity value for the reduction (also, the value
+ *                 that is returned when there are no input elements)
+ * @param mapper a mapping function to apply to each input value
+ * @param op a BinaryOperator&amp;lt;U&amp;gt; used to reduce the mapped values
+ * @return a Collector implementing the map-reduce operation
+ *
+ * @see #reducing(Object, BinaryOperator)
+ * @see #reducing(BinaryOperator)
+ */
+public static &amp;lt;T, U&amp;gt; Collector&amp;lt;T, ?, U&amp;gt; reducing(U identity,
+        Function&amp;lt;? super T, ? extends U&amp;gt; mapper, BinaryOperator&amp;lt;U&amp;gt; op);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;重载的&lt;code class=&quot;highlighter-rouge&quot;&gt;reducing&lt;/code&gt;方法简化了输入流的类型和归约值的类型，即当两者相同时，无需再使用
+映射函数，因此提供了仅有初始值和二元函数的方法，
+&lt;code class=&quot;highlighter-rouge&quot;&gt;public static &amp;lt;T&amp;gt; Collector&amp;lt;T, ?, T&amp;gt; reducing(T identity, BinaryOperator&amp;lt;T&amp;gt; op)&lt;/code&gt;
+和仅有归约二元函数的方法，但是需要注意因为没有提供起始值，并且流可能为空，所以返回的
+&lt;code class=&quot;highlighter-rouge&quot;&gt;Collector&lt;/code&gt;类型是一个返回&lt;code class=&quot;highlighter-rouge&quot;&gt;Optional&amp;lt;T&amp;gt;&lt;/code&gt;的对象。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;public static &amp;lt;T&amp;gt; Collector&amp;lt;T, ?, Optional&amp;lt;T&amp;gt;&amp;gt; reducing(BinaryOperator&amp;lt;T&amp;gt; op)&lt;/code&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;流的归约接口和收集器的归约方法&quot;&gt;流的归约接口和收集器的归约方法&lt;/h4&gt;
+&lt;p&gt;对比&lt;code class=&quot;highlighter-rouge&quot;&gt;Stream.reduce&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;Collectors.reducing&lt;/code&gt;，我们可以发现许多类似之处，都存在三种
+方法重载，并且使用模式基本一致。主要区别在于&lt;code class=&quot;highlighter-rouge&quot;&gt;Stream.reduce&lt;/code&gt;方法用于直接在流中进行
+归约，且其语义是不会改变容器，因此归约的方法均为无状态，从而可以进行高效地并行，而
+&lt;code class=&quot;highlighter-rouge&quot;&gt;Collectors&lt;/code&gt;是一个工具类，&lt;code class=&quot;highlighter-rouge&quot;&gt;Collectors.reducing&lt;/code&gt;的目的是返回一个&lt;code class=&quot;highlighter-rouge&quot;&gt;Collector&lt;/code&gt;接口，
+通过该接口，我们可以结合&lt;code class=&quot;highlighter-rouge&quot;&gt;Stream.collect&lt;/code&gt;方法，对有状态的操作进行并行归约(使用分支/合并框架)。
+因此，&lt;code class=&quot;highlighter-rouge&quot;&gt;collect&lt;/code&gt;方法的语义则是改变容器，从而累积要输出的结果。&lt;/p&gt;
+
+&lt;h4 id=&quot;收集框架的灵活性&quot;&gt;收集框架的灵活性&lt;/h4&gt;
+&lt;p&gt;可以通过不同的方法执行相同的操作&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 对菜单所有菜品总热量求和，使用多种方法
+menu.stream().collect(summingInt(Dish::getCalories));
+menu.stream().collect(reducing(0, Dish::getCalories, Integer::sum));
+menu.stream().map(Dish::getCalories).reduce(Integer::sum).get();
+menu.stream().mapToInt(Dish::getCalories).sum();
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;对于&lt;code class=&quot;highlighter-rouge&quot;&gt;Collectors.counting&lt;/code&gt;方法，实际上是通过&lt;code class=&quot;highlighter-rouge&quot;&gt;Collectors.reducing&lt;/code&gt;方法实现。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public static &amp;lt;T&amp;gt; Collector&amp;lt;T, ?, Long&amp;gt; counting() {
+    return reducing(0L, e -&amp;gt; 1L, Long::sum);
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;通过上面的例子说明收集器在某种程度上比&lt;code class=&quot;highlighter-rouge&quot;&gt;Stream&lt;/code&gt;接口上直接提供的方法用起来更复杂，但好处
+在于它们能提供更高水平的抽象和概括，也更容易重用和自定义。但是这么多方案中，始终选择一个
+最专业的方案是我们在实践中推荐的，因为最后一个热量求和方法最简洁，并且因为避免了自动
+拆箱操作，所以性能也是最好的。&lt;/p&gt;
+
+&lt;h3 id=&quot;分组&quot;&gt;分组&lt;/h3&gt;
+&lt;p&gt;通过&lt;code class=&quot;highlighter-rouge&quot;&gt;Collectors.groupingBy&lt;/code&gt;工厂方法返回的收集器，可以轻松完成分组任务。如通过菜品
+的类型进行分组并收集。我们可以看到最终结果是一个&lt;code class=&quot;highlighter-rouge&quot;&gt;Map&amp;lt;Dish.Type, List&amp;lt;Dish&amp;gt;&amp;gt;&lt;/code&gt;，
+通过&lt;code class=&quot;highlighter-rouge&quot;&gt;Dish.Type&lt;/code&gt;为键，收集到对应的菜品保存在&lt;code class=&quot;highlighter-rouge&quot;&gt;List&amp;lt;Dish&amp;gt;&lt;/code&gt;中。从而通过描述分组简化了
+分组的实现，可读性大大提高，开发者不需要自己编写和维护该Map，同时因为分组使用了
+分支/合并框架，可以支持高效的并行操作。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;private Map&amp;lt;Dish.Type, List&amp;lt;Dish&amp;gt;&amp;gt; groupDishesByType() {
+    return menu.stream().collect(groupingBy(Dish::getType));
+}
+
+// 分组方法也有三种重载，下面给出最简单的一种。只需要提供一个分类函数，其中输入是流
+中元素的值，输出则是分类依据的键，最终整个流将根据每个元素所属键的不同而分类并收集。
+public static &amp;lt;T, K&amp;gt; Collector&amp;lt;T, ?, Map&amp;lt;K, List&amp;lt;T&amp;gt;&amp;gt;&amp;gt;
+    groupingBy(Function&amp;lt;? super T, ? extends K&amp;gt; classifier);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;h4 id=&quot;多级分组&quot;&gt;多级分组&lt;/h4&gt;
+&lt;p&gt;在上例根据菜品类型分组的基础上，再根据菜品热量进行子分组，此时使用的&lt;code class=&quot;highlighter-rouge&quot;&gt;groupingBy&lt;/code&gt;
+方法需要第二个参数，即传递用于进行子分组的&lt;code class=&quot;highlighter-rouge&quot;&gt;Collector&lt;/code&gt;收集器。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;private Map&amp;lt;Dish.Type, Map&amp;lt;CaloricLevel, List&amp;lt;Dish&amp;gt;&amp;gt;&amp;gt;
+                                   groupDishedByTypeAndCaloricLevel() {
+    return menu.stream().collect(
+        groupingBy(Dish::getType,
+            groupingBy((Dish dish) -&amp;gt; {
+                if (dish.getCalories() &amp;lt;= 400) return CaloricLevel.DIET;
+                else if (dish.getCalories() &amp;lt;= 700) return CaloricLevel.NORMAL;
+                else return CaloricLevel.FAT;
+            } )
+        )
+    );
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;而通过传递的收集器类型不同，除了进行子分组外，还能进行诸如计算、映射、收集等操作。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 统计各类菜品的数量。
+menu.stream().collect(groupingBy(Dish::getType, counting()));
+
+// 找出各类热量最高的菜品。注意返回Map&amp;lt;Dish.Type, Optional&amp;lt;Dish&amp;gt;&amp;gt;
+menu.stream().collect(groupingBy(Dish::getType,
+                                maxBy(comparingInt(Dish::getCalories))));
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;上述找出各类热量最高的菜品中，最终我们获得的是一个&lt;code class=&quot;highlighter-rouge&quot;&gt;Map&amp;lt;Dish.Type, Optional&amp;lt;Dish&amp;gt;&amp;gt;&lt;/code&gt;
+类型，而根据分组的定义可知，分组的菜品绝对不可能为空，因此，我们希望得到更为精确的类型。
+通过&lt;code class=&quot;highlighter-rouge&quot;&gt;collectingAndThen&lt;/code&gt;方法以及传入的第二个转换函数来自动执行取值。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 找出各类热量最高的菜品。返回Map&amp;lt;Dish.Type, Dish&amp;gt;
+menu.stream().collect(groupingBy(Dish::getType,
+                collectingAndThen(maxBy(comparingInt(Dish::getCalories)),
+                Optional::get));
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;对于&lt;code class=&quot;highlighter-rouge&quot;&gt;groupingBy&lt;/code&gt;联合其他类型的收集器，可以通过&lt;code class=&quot;highlighter-rouge&quot;&gt;Collectors.mapping&lt;/code&gt;方法生成，该
+方法第一个参数对流中的元素做变换，另一个参数则将对象收集起来，通过变换，从而让接收特定
+类型元素的收集器能够适应不同类型的对象。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public static &amp;lt;T, U, A, R&amp;gt; Collector&amp;lt;T, ?, R&amp;gt; mapping(
+                                Function&amp;lt;? super T, ? extends U&amp;gt; mapper,
+                                Collector&amp;lt;? super U, A, R&amp;gt; downstream);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;比如我们想知道每一种菜品分别包含了哪一些热量级别，可以通过&lt;code class=&quot;highlighter-rouge&quot;&gt;mapping&lt;/code&gt;传递一个转换函数
+以及&lt;code class=&quot;highlighter-rouge&quot;&gt;toSet()&lt;/code&gt;收集器来实现。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;private static Map&amp;lt;Dish.Type, Set&amp;lt;CaloricLevel&amp;gt;&amp;gt; caloricLevelsByType() {
+    return menu.stream().collect(
+            groupingBy(Dish::getType, mapping(
+                    dish -&amp;gt; { if (dish.getCalories() &amp;lt;= 400)
+                                    return CaloricLevel.DIET;
+                    else if (dish.getCalories() &amp;lt;= 700)
+                                    return CaloricLevel.NORMAL;
+                    else return CaloricLevel.FAT; },
+                    toSet() )));
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;分区&quot;&gt;分区&lt;/h3&gt;
+&lt;p&gt;分区是通过一个特定谓词（返回一个布尔值的函数）来将流中的元素分为满足条件的一类和不满足
+条件的一类，因此可以理解为分组的一种特殊情况，包含仅包含&lt;code class=&quot;highlighter-rouge&quot;&gt;true&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;false&lt;/code&gt;两种条件。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public static &amp;lt;T&amp;gt; Collector&amp;lt;T, ?, Map&amp;lt;Boolean, List&amp;lt;T&amp;gt;&amp;gt;&amp;gt;
+                        partitioningBy(Predicate&amp;lt;? super T&amp;gt; predicate);
+
+// 根据是否素食来分区菜品
+private Map&amp;lt;Boolean, List&amp;lt;Dish&amp;gt;&amp;gt; partitionByVegeterian() {
+    return menu.stream().collect(partitioningBy(Dish::isVegetarian));
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;同样分区也支持多级分区，且可以进行分区和分组的多级组合，从而需要使用分区函数的重载版本，
+用于在第二个参数中传递子收集器。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public static &amp;lt;T, D, A&amp;gt; Collector&amp;lt;T, ?, Map&amp;lt;Boolean, D&amp;gt;&amp;gt; partitioningBy(
+  Predicate&amp;lt;? super T&amp;gt; predicate, Collector&amp;lt;? super T, A, D&amp;gt; downstream);
+
+ // 根据素食分区，并再进行菜品分类
+private Map&amp;lt;Boolean, Map&amp;lt;Dish.Type, List&amp;lt;Dish&amp;gt;&amp;gt;&amp;gt; vegetarianDishesByType() {
+    return menu.stream().collect(partitioningBy(Dish::isVegetarian,
+                                            groupingBy(Dish::getType)));
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;收集器接口&quot;&gt;收集器接口&lt;/h3&gt;
+&lt;p&gt;通过实现收集器接口&lt;code class=&quot;highlighter-rouge&quot;&gt;Collector&lt;/code&gt;，我们可以自定义收集器，从而实现个性化行为。先看一下
+该接口的定义，T为流中元素的类型，A为累加器实现的类型，收集器通过该类型来实现状态的改变，
+R为收集操作得到的结果类型（通常收集为集合，但也可以是其他类型）&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/*
+ * @param &amp;lt;T&amp;gt; the type of input elements to the reduction operation
+ * @param &amp;lt;A&amp;gt; the mutable accumulation type of the reduction operation (often
+ *            hidden as an implementation detail)
+ * @param &amp;lt;R&amp;gt; the result type of the reduction operation
+ */
+public interface Collector&amp;lt;T, A, R&amp;gt; {
+    Supplier&amp;lt;A&amp;gt; supplier();         // 建立新的结果容器 A get();
+    BiConsumer&amp;lt;A, T&amp;gt; accumulator(); // 将元素添加到结果容器 void accept(A a, T t);
+    Function&amp;lt;A, R&amp;gt; finisher();      // 对结果容器应用最终转换 R apply(A a);
+    BinaryOperator&amp;lt;A&amp;gt; combiner();   // 合并两个结果容器 A apply(A a1, A a2);
+    Set&amp;lt;Characteristics&amp;gt; characteristics(); // 返回不可变的描述收集器行为的集合
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;通过前三个方法，即可满足对流进行顺序归约，增加&lt;code class=&quot;highlighter-rouge&quot;&gt;combiner&lt;/code&gt;方法后，则可以对流进行并行
+归约，它会用到合并/分支框架和&lt;code class=&quot;highlighter-rouge&quot;&gt;Spliterator&lt;/code&gt;抽象(一种用于划分任务为更小部分的接口)&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/*
+ * @param &amp;lt;R&amp;gt; the type of the result
+ * @param &amp;lt;A&amp;gt; the intermediate accumulation type of the Collector
+ * @param collector the Collector describing the reduction
+ * @return the result of the reduction
+ * @see #collect(Supplier, BiConsumer, BiConsumer)
+ * @see Collectors
+ */
+&amp;lt;R, A&amp;gt; R collect(Collector&amp;lt;? super T, A, R&amp;gt; collector);
+
+/*
+ * @param &amp;lt;R&amp;gt; type of the result
+ * @param supplier a function that creates a new result container. For a
+ *                 parallel execution, this function may be called
+ *                 multiple times and must return a fresh value each time.
+ * @param accumulator an associative, non-interfering, stateless function
+ *        for incorporating an additional element into a result
+ * @param combiner an associative, non-interfering, stateless function
+ *        for combining two values, which must be compatible with the
+ *        accumulator function
+ * @return the result of the reduction
+ */
+&amp;lt;R&amp;gt; R collect(Supplier&amp;lt;R&amp;gt; supplier,
                   BiConsumer&amp;lt;R, ? super T&amp;gt; accumulator,
                   BiConsumer&amp;lt;R, R&amp;gt; combiner);
-```
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
-### 附录A 中间操作和终端操作表
-| 操作      | 类型            | 返回类型           | 使用的类型/函数式接口 | 函数描述符    |
-| -------- | --------------- | ----------------- | ------------------ | ------------ |
-| filter   | 中间             | `Stream&lt;T&gt;`       | `Predicate&lt;T&gt;`     | T -&amp;gt; boolean |
-| distinct | 中间（有状态-无界）| `Stream&lt;T&gt;`       |                    |              |
-&lt;/T&gt;&lt;/T&gt;&lt;/T&gt;&lt;/R&gt;&lt;/R&gt;</content><author><name>grimkeke</name></author><summary type="html">什么是流 流（Stream）是一组Java API，通过声明式的方式处理数据集合（类似于SQL，通过编写查询 的语句，而不是亲自实现一个查询功能）。对比之前面向集合，亲自来实现集合操作，通过流， 开发者可以关注与实现的目的，而非实现操作本身。对比如下两段功能一样的代码，查询Dish列表 中卡路里小于400的菜品名称，并且根据菜品卡路里排序。java7的方法即为根据语义进行实现， 即首先遍历所有的菜品，找出小于400卡路里的菜品添加到临时列表，进行排序，然后再创建一个 列表用于提取菜品的名称。 ``` public List getLowCaloricDishesNamesInJava7(List dishes){ List lowCaloricDishes = new ArrayList&amp;lt;&amp;gt;(); for(Dish d: dishes){ if(d.getCalories() &amp;lt; 400){ lowCaloricDishes.add(d); } }</summary></entry><entry><title type="html">Hello World To Java8</title><link href="http://0.0.0.0:4000/java8/2018/01/12/hello-world-to-java8.html" rel="alternate" type="text/html" title="Hello World To Java8" /><published>2018-01-12T11:57:44+08:00</published><updated>2018-01-12T11:57:44+08:00</updated><id>http://0.0.0.0:4000/java8/2018/01/12/hello-world-to-java8</id><content type="html" xml:base="http://0.0.0.0:4000/java8/2018/01/12/hello-world-to-java8.html">&lt;h2 id=&quot;为什么用java8&quot;&gt;为什么用java8&lt;/h2&gt;
+&lt;h3 id=&quot;附录a-中间操作和终端操作表&quot;&gt;附录A 中间操作和终端操作表&lt;/h3&gt;
+&lt;p&gt;| 操作      | 类型            | 返回类型           | 使用的类型/函数式接口 | 函数描述符    |
+| ——– | ————— | —————– | —————— | ———— |
+| filter   | 中间             | &lt;code class=&quot;highlighter-rouge&quot;&gt;Stream&amp;lt;T&amp;gt;&lt;/code&gt;       | &lt;code class=&quot;highlighter-rouge&quot;&gt;Predicate&amp;lt;T&amp;gt;&lt;/code&gt;     | T -&amp;gt; boolean |
+| distinct | 中间（有状态-无界）| &lt;code class=&quot;highlighter-rouge&quot;&gt;Stream&amp;lt;T&amp;gt;&lt;/code&gt;       |                    |              |&lt;/p&gt;
+
+&lt;h3 id=&quot;附录b-收集器工具类方法表&quot;&gt;附录B 收集器工具类方法表&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;toList&lt;/code&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;toSet&lt;/code&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;toCollection&lt;/code&gt;&lt;/p&gt;</content><author><name>grimkeke</name></author><summary type="html">什么是流 流（Stream）是一组Java API，通过声明式的方式处理数据集合（类似于SQL，通过编写查询 的语句，而不是亲自实现一个查询功能）。对比之前面向集合，亲自来实现集合操作，通过流， 开发者可以关注与实现的目的，而非实现操作本身。对比如下两段功能一样的代码，查询Dish列表 中卡路里小于400的菜品名称，并且根据菜品卡路里排序。java7的方法即为根据语义进行实现， 即首先遍历所有的菜品，找出小于400卡路里的菜品添加到临时列表，进行排序，然后再创建一个 列表用于提取菜品的名称。 ``` public List getLowCaloricDishesNamesInJava7(List dishes){ List lowCaloricDishes = new ArrayList&amp;lt;&amp;gt;(); for(Dish d: dishes){ if(d.getCalories() &amp;lt; 400){ lowCaloricDishes.add(d); } }</summary></entry><entry><title type="html">Hello World To Java8</title><link href="http://0.0.0.0:4000/java8/2018/01/12/hello-world-to-java8.html" rel="alternate" type="text/html" title="Hello World To Java8" /><published>2018-01-12T11:57:44+08:00</published><updated>2018-01-12T11:57:44+08:00</updated><id>http://0.0.0.0:4000/java8/2018/01/12/hello-world-to-java8</id><content type="html" xml:base="http://0.0.0.0:4000/java8/2018/01/12/hello-world-to-java8.html">&lt;h2 id=&quot;为什么用java8&quot;&gt;为什么用java8&lt;/h2&gt;
 &lt;p&gt;在了解和学习了java8之后，我发现java8带来的优势和所提升的效率，比学习它的成本要多得多，
 所以在此向大家推荐使用java8的新特性：&lt;/p&gt;
 &lt;ol&gt;

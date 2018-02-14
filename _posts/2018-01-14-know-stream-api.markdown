@@ -247,7 +247,7 @@ public interface Consumer<T> {
 ### 归约
 归约用来将一系列元素折叠成一个元素，比如对1至100的数字求和，通过归约操作，我们可以不断
 对累积值和流中的数字使用加法，从而完成所有数字的累加，最终累积值即为所有元素之和。归约
-操作通过`reduce()`方法实现。我们先来看一下它的用法。
+操作通过`Stream.reduce`方法实现。我们先来看一下它的用法。
 ```
 List<Integer> numbers = Arrays.asList(3,4,5,1,2);
 int sum = numbers.stream().reduce(0, (a, b) -> a + b);
@@ -255,19 +255,31 @@ int sum = numbers.stream().reduce(0, (a, b) -> a + b);
 // 通过Integer提供的求和静态方法sum完成累加
 int sum2 = numbers.stream().reduce(0, Integer::sum);
 ```
-该方法有如下两种重载：
-- 提供初始值，以及一个二元操作的方法引用，上面例子使用的是该用法，通过提供初始值以及
-一个函数引用，我们向流提供一种累加的方法，即我们需要一个整数，初始值为0，
-通过`(a, b) -> a + b`方法 （即`Integer::sum`）不断与流中的元素进行归约计算，
-最终得到累加和的输出。
+该方法有如下三种重载：
+- 提供初始值，以及一个二元操作的方法引用
+
+上面例子使用的是该用法，通过提供初始值以及一个函数引用，我们向流提供一种累加的方法，
+即我们需要一个整数，初始值为0， 通过`(a, b) -> a + b`方法（即`Integer::sum`）
+不断与流中的元素进行归约计算，最终得到累加和的输出。
+
 ```
 T reduce(T identity, BinaryOperator<T> accumulator);
 ```
-- 仅提供二元操作的方法引用，当流为空时，可能会返回空结果，因此方法签名的返回值为
-一个可选的`Optional<T>`。
+- 仅提供二元操作的方法引用
+
+当流为空时，可能会返回空结果，因此方法签名的返回值为一个可选的`Optional<T>`。
+
 ```
 Optional<T> reduce(BinaryOperator<T> accumulator);
 ```
+- 更加通用的流归约方法
+
+上面两个方法都能通过下面三个参数的方法实现，首先U是我们归约期望得到的目标值类型，
+第一个参数给了一个起始值，当流为空的时候用作默认值返回；第二个参数是一个二元函数，
+用来将归约中间值以及流中的元素转换为目标值；第三个参数用来对归约中间值以及第二步得到的
+目标类型值进行归约计算。
+`<U> U reduce(U identity, BiFunction<U, ? super T, U> accumulator,
+                 BinaryOperator<U> combiner);`
 
 同时，我们也可以通过归约来求出流中的最大值最小值，因为求出流中的最大值最小值也是分别
 两两比较流内的数字。下面例子可以计算如何求流的最大值，当流为空时，最大值为0。
@@ -288,6 +300,7 @@ min.ifPresent(System.out::println);
 对于sort或者distinct这类有状态的操作是通过一个输入流产出对应的输出流，每一个输入数据
 进入处理时还需要知道先前处理的历史，因此当流比较大或者无界时，有一些操作就会有问题，比如
 将一个质数流进行倒序（数学告诉我们，无穷多的质数无法倒序排序）
+
 ### 数值流
 数值流是原始类型流的特化流，专门用于处理数值类型，如`InputStream`、`DoubleStream`、
 `LongStream`，使用数值流有两个原因，一是通用的流并没有提供数值操作才有的类似sum等方法，
@@ -306,6 +319,7 @@ Stream<Integer> stream = intStream.boxed();
 OptionalInt maxCalories = intStream.max();
 int max = maxCalories.orElse(1);
 ```
+
 #### 数值流的范围
 通过`rangeClosed(m, n)`方法生成从m到n（不包括n）范围的数值流。
 ```
@@ -316,15 +330,22 @@ System.out.println(evenNumbers.count());
 ### 构建流
 构建一个流有多种办法，通过从值序列、数组、文件来创建，甚至是生成函数来创建无限流。
 - 生成空流
+
 ```Stream<String> emptyStream = Stream.empty();```
-- 显示创建流
+
+- 显式创建流
+
 ```Stream<String> stream = Stream.of("hello", " world", " my", " friends");```
+
 - 由数组创建流
+
 ```
 int[] numbers = {2, 3, 5, 7, 11, 13};
 int sum = Arrays.stream(numbers).sum();
 ```
+
 - 由文件生成流
+
 ```
 // 读取data.txt文件并计算使用了多少种不同的单词。
 Paths paths = Paths.get("path/data.txt");
@@ -333,7 +354,9 @@ long uniqueWords = Files.lines(paths, Charset.defaultCharset())
                         .distinct()
                         .count();
 ```
+
 - 通过函数生成无限流
+
 通过`Stream.iterate`和`Stream.generate`方法可以生成无限流，对于无限流的使用，一般
 会通过`limit(n)`来限制流的大小，避免出现无穷打印。
 `public static<T> Stream<T> iterate(final T seed, final UnaryOperator<T> f);`
@@ -350,6 +373,7 @@ Stream.iterate(new int[]{0, 1}, t -> new int[]{t[1],t[0] + t[1]})
       .limit(10)
       .forEach(t -> System.out.println("(" + t[0] + ", " + t[1] + ")"));
 ```
+
 与`iterate`方法类似，`generate`方法是通过接收一个`Supplier<T>`的函数引用来生成
 新的值。`public static<T> Stream<T> generate(Supplier<T> s);`，通过方法引用，
 我们可以内部维护一个状态，在每次生成数据之后可以更新该状态，从而实现有状态的供应源。
@@ -365,15 +389,312 @@ DoubleStream.generate(Math::random)
             .limit(5)
             .forEach(System.out::println);
 ```
+
 ### 收集
+收集器是一个将数据按指定需求描述进行处理的函数式接口。通过收集器，你可以只通过描述数据
+如何收集，而避免亲自实现如何收集。首先看一个根据货币类型分组交易的问题，使用原始的
+迭代编码和使用收集器的简洁编码。
 ```
+// 通过迭代的方式以Currency为键，对Transaction进行分组
+private static void groupImperatively() {
+    Map<Currency, List<Transaction>> transByCurrencies = new HashMap<>();
+    for (Transaction transaction : transactions) {
+        Currency currency = transaction.getCurrency();
+        List<Transaction> transForCurrency = transByCurrencies.get(currency);
+        if (transForCurrency == null) {
+                transForCurrency = new ArrayList<>();
+            transByCurrencies.put(currency, transForCurrency);
+        }
+        transForCurrency.add(transaction);
+    }
+    System.out.println(transByCurrencies);
+}
+
+// 通过java8收集器进行分组
+private static void groupFunctionally() {
+    Map<Currency, List<Transaction>> transByCurrencies = transactions
+        .stream()
+        .collect(Collectors.groupingBy(Transaction::getCurrency));
+    System.out.println(transByCurrencies);
+}
+```
+从上面的对比看到使用函数式风格的收集器可以更好地维护代码，特别是当还有子分组的情况下，
+迭代式的实现子分组会加倍复杂化代码。而通过收集器，则只需要增加一个子收集器即可。可以
+更好地复合和重用。而其中所有的收集器，都通过工厂类`Collectors`提供。
+
+- 归约
+
+获取菜单中有多少种菜`menu.stream().collect(Collectors.counting());`
+也可以采用下面更为直接的形式`menu.stream().count();`
+
+- 最大最小值
+
+通过传入一个比较器，使用工厂类的`maxBy`和`minBy`方法查找最高或最低卡路里的菜肴。
+```
+// 获取最高热量的菜品
+Comparator<Dish> comparator = Comparator.comparingInt(Dish::getCalories);
+Optional<Dish> mostCaloriesDish = menu.stream()
+                                .collect(Collectors.maxBy(comparator));
+```
+
+- 汇总
+
+`Collectors.summingInt`方法返回一个"将对象转换为int的函数"的收集器，通过该收集器
+来计算菜单中所有菜品的总热量。针对其他原生类型还提供了`summingLong`和`summingDouble`
+方法。而汇总还包含了求平均数`averagingInt`方法和对应long、double类型特异方法。为了
+能够在一次计算中获取包含最大值、最小值、平均值等在内的所有值，Collectors还提供了
+`summarizingInt`方法，用于一次性获取对应规约汇总值。同提供long、double特异方法。
+
+```
+// 对菜单所有菜品总热量求和
+int total = menu.stream().collect(Collectors.summingInt(Dish::getCalories));
+
+// 平均热量
+int average = menu.stream().collect(averagingInt(Dish::getCalories));
+
+// 关于热量的统计值
+IntSummaryStatistics statistics = menu.stream()
+                        .collect(summarizingInt(Dish::getCalories));
+```
+
+- 连接字符串
+
+连接字符串会将流中的所有元素通过指定的分隔符，串成一个字符串。
+
+```
+// 根据逗号分隔所有菜品的菜名
+String shortMenu = menu.stream().map(Dish::getName).collect(joining(", "));
+
+// 如果Dish类中有一个toString方法来返回菜名，则无需通过菜品获取名称的映射
+String shortMenu = menu.stream().collect(joining());
+```
+
+#### 广义的归约汇总
+上述我们讨论的所有收集器，都是一个`Collectors.reducing`工厂方法定义的归约过程的
+特殊情况。`reducing`方法是之前介绍的特殊情况的一般化。可以说，前面介绍的案例仅仅是
+为了方便程序员开发而已，但是方便开发人员和可读性可是头等大事！，所以我们可以通过一般
+化方法计算菜单的总热量。
+```
+//
+int totalCalories = menu.stream()
+              .collect(reducing(0, Dish::getCalories, Integer::sum)));
+```
+reducing共有三种重载方法，上面使用的是最基础的方法，首先给定一个起始值0，当流为空的
+时候可作为默认值直接返回；第二个参数提供一个Function，用于将流中的数据类型转换为需要
+归约的目标数据类型，如将Dish类型转换为int型；第三个参数则是用来进行归约的二元运算函数，
+通过起始值0和流中第一个元素的转换类型，进行二元运算得到新值，然后将新值与流中的下一个
+元素的转换值，继续进行归约运算，直到流中元素完成归约计算。下面是`reducing`的定义。
+```
+/*
+ * @param <T> the type of the input elements
+ * @param <U> the type of the mapped values
+ * @param identity the identity value for the reduction (also, the value
+ *                 that is returned when there are no input elements)
+ * @param mapper a mapping function to apply to each input value
+ * @param op a BinaryOperator<U> used to reduce the mapped values
+ * @return a Collector implementing the map-reduce operation
+ *
+ * @see #reducing(Object, BinaryOperator)
+ * @see #reducing(BinaryOperator)
+ */
+public static <T, U> Collector<T, ?, U> reducing(U identity,
+        Function<? super T, ? extends U> mapper, BinaryOperator<U> op);
+```
+
+重载的`reducing`方法简化了输入流的类型和归约值的类型，即当两者相同时，无需再使用
+映射函数，因此提供了仅有初始值和二元函数的方法，
+`public static <T> Collector<T, ?, T> reducing(T identity, BinaryOperator<T> op)`
+和仅有归约二元函数的方法，但是需要注意因为没有提供起始值，并且流可能为空，所以返回的
+`Collector`类型是一个返回`Optional<T>`的对象。
+`public static <T> Collector<T, ?, Optional<T>> reducing(BinaryOperator<T> op)`
+
+#### 流的归约接口和收集器的归约方法
+对比`Stream.reduce`和`Collectors.reducing`，我们可以发现许多类似之处，都存在三种
+方法重载，并且使用模式基本一致。主要区别在于`Stream.reduce`方法用于直接在流中进行
+归约，且其语义是不会改变容器，因此归约的方法均为无状态，从而可以进行高效地并行，而
+`Collectors`是一个工具类，`Collectors.reducing`的目的是返回一个`Collector`接口，
+通过该接口，我们可以结合`Stream.collect`方法，对有状态的操作进行并行归约(使用分支/合并框架)。
+因此，`collect`方法的语义则是改变容器，从而累积要输出的结果。
+
+#### 收集框架的灵活性
+可以通过不同的方法执行相同的操作
+```
+// 对菜单所有菜品总热量求和，使用多种方法
+menu.stream().collect(summingInt(Dish::getCalories));
+menu.stream().collect(reducing(0, Dish::getCalories, Integer::sum));
+menu.stream().map(Dish::getCalories).reduce(Integer::sum).get();
+menu.stream().mapToInt(Dish::getCalories).sum();
+```
+
+对于`Collectors.counting`方法，实际上是通过`Collectors.reducing`方法实现。
+```
+public static <T> Collector<T, ?, Long> counting() {
+    return reducing(0L, e -> 1L, Long::sum);
+}
+```
+通过上面的例子说明收集器在某种程度上比`Stream`接口上直接提供的方法用起来更复杂，但好处
+在于它们能提供更高水平的抽象和概括，也更容易重用和自定义。但是这么多方案中，始终选择一个
+最专业的方案是我们在实践中推荐的，因为最后一个热量求和方法最简洁，并且因为避免了自动
+拆箱操作，所以性能也是最好的。
+
+### 分组
+通过`Collectors.groupingBy`工厂方法返回的收集器，可以轻松完成分组任务。如通过菜品
+的类型进行分组并收集。我们可以看到最终结果是一个`Map<Dish.Type, List<Dish>>`，
+通过`Dish.Type`为键，收集到对应的菜品保存在`List<Dish>`中。从而通过描述分组简化了
+分组的实现，可读性大大提高，开发者不需要自己编写和维护该Map，同时因为分组使用了
+分支/合并框架，可以支持高效的并行操作。
+```
+private Map<Dish.Type, List<Dish>> groupDishesByType() {
+    return menu.stream().collect(groupingBy(Dish::getType));
+}
+
+// 分组方法也有三种重载，下面给出最简单的一种。只需要提供一个分类函数，其中输入是流
+中元素的值，输出则是分类依据的键，最终整个流将根据每个元素所属键的不同而分类并收集。
+public static <T, K> Collector<T, ?, Map<K, List<T>>>
+    groupingBy(Function<? super T, ? extends K> classifier);
+```
+#### 多级分组
+在上例根据菜品类型分组的基础上，再根据菜品热量进行子分组，此时使用的`groupingBy`
+方法需要第二个参数，即传递用于进行子分组的`Collector`收集器。
+```
+private Map<Dish.Type, Map<CaloricLevel, List<Dish>>>
+                                   groupDishedByTypeAndCaloricLevel() {
+    return menu.stream().collect(
+        groupingBy(Dish::getType,
+            groupingBy((Dish dish) -> {
+                if (dish.getCalories() <= 400) return CaloricLevel.DIET;
+                else if (dish.getCalories() <= 700) return CaloricLevel.NORMAL;
+                else return CaloricLevel.FAT;
+            } )
+        )
+    );
+}
+```
+而通过传递的收集器类型不同，除了进行子分组外，还能进行诸如计算、映射、收集等操作。
+```
+// 统计各类菜品的数量。
+menu.stream().collect(groupingBy(Dish::getType, counting()));
+
+// 找出各类热量最高的菜品。注意返回Map<Dish.Type, Optional<Dish>>
+menu.stream().collect(groupingBy(Dish::getType,
+                                maxBy(comparingInt(Dish::getCalories))));
+```
+上述找出各类热量最高的菜品中，最终我们获得的是一个`Map<Dish.Type, Optional<Dish>>`
+类型，而根据分组的定义可知，分组的菜品绝对不可能为空，因此，我们希望得到更为精确的类型。
+通过`collectingAndThen`方法以及传入的第二个转换函数来自动执行取值。
+```
+// 找出各类热量最高的菜品。返回Map<Dish.Type, Dish>
+menu.stream().collect(groupingBy(Dish::getType,
+                collectingAndThen(maxBy(comparingInt(Dish::getCalories)),
+                Optional::get));
+```
+
+对于`groupingBy`联合其他类型的收集器，可以通过`Collectors.mapping`方法生成，该
+方法第一个参数对流中的元素做变换，另一个参数则将对象收集起来，通过变换，从而让接收特定
+类型元素的收集器能够适应不同类型的对象。
+```
+public static <T, U, A, R> Collector<T, ?, R> mapping(
+                                Function<? super T, ? extends U> mapper,
+                                Collector<? super U, A, R> downstream);
+```
+比如我们想知道每一种菜品分别包含了哪一些热量级别，可以通过`mapping`传递一个转换函数
+以及`toSet()`收集器来实现。
+```
+private static Map<Dish.Type, Set<CaloricLevel>> caloricLevelsByType() {
+    return menu.stream().collect(
+            groupingBy(Dish::getType, mapping(
+                    dish -> { if (dish.getCalories() <= 400)
+                                    return CaloricLevel.DIET;
+                    else if (dish.getCalories() <= 700)
+                                    return CaloricLevel.NORMAL;
+                    else return CaloricLevel.FAT; },
+                    toSet() )));
+}
+```
+
+### 分区
+分区是通过一个特定谓词（返回一个布尔值的函数）来将流中的元素分为满足条件的一类和不满足
+条件的一类，因此可以理解为分组的一种特殊情况，包含仅包含`true`和`false`两种条件。
+```
+public static <T> Collector<T, ?, Map<Boolean, List<T>>>
+                        partitioningBy(Predicate<? super T> predicate);
+
+// 根据是否素食来分区菜品
+private Map<Boolean, List<Dish>> partitionByVegeterian() {
+    return menu.stream().collect(partitioningBy(Dish::isVegetarian));
+}
+```
+同样分区也支持多级分区，且可以进行分区和分组的多级组合，从而需要使用分区函数的重载版本，
+用于在第二个参数中传递子收集器。
+```
+public static <T, D, A> Collector<T, ?, Map<Boolean, D>> partitioningBy(
+  Predicate<? super T> predicate, Collector<? super T, A, D> downstream);
+
+ // 根据素食分区，并再进行菜品分类
+private Map<Boolean, Map<Dish.Type, List<Dish>>> vegetarianDishesByType() {
+    return menu.stream().collect(partitioningBy(Dish::isVegetarian,
+                                            groupingBy(Dish::getType)));
+}
+```
+
+### 收集器接口
+通过实现收集器接口`Collector`，我们可以自定义收集器，从而实现个性化行为。先看一下
+该接口的定义，T为流中元素的类型，A为累加器实现的类型，收集器通过该类型来实现状态的改变，
+R为收集操作得到的结果类型（通常收集为集合，但也可以是其他类型）
+```
+/*
+ * @param <T> the type of input elements to the reduction operation
+ * @param <A> the mutable accumulation type of the reduction operation (often
+ *            hidden as an implementation detail)
+ * @param <R> the result type of the reduction operation
+ */
+public interface Collector<T, A, R> {
+    Supplier<A> supplier();         // 建立新的结果容器 A get();
+    BiConsumer<A, T> accumulator(); // 将元素添加到结果容器 void accept(A a, T t);
+    Function<A, R> finisher();      // 对结果容器应用最终转换 R apply(A a);
+    BinaryOperator<A> combiner();   // 合并两个结果容器 A apply(A a1, A a2);
+    Set<Characteristics> characteristics(); // 返回不可变的描述收集器行为的集合
+}
+```
+通过前三个方法，即可满足对流进行顺序归约，增加`combiner`方法后，则可以对流进行并行
+归约，它会用到合并/分支框架和`Spliterator`抽象(一种用于划分任务为更小部分的接口)
+
+```
+/*
+ * @param <R> the type of the result
+ * @param <A> the intermediate accumulation type of the Collector
+ * @param collector the Collector describing the reduction
+ * @return the result of the reduction
+ * @see #collect(Supplier, BiConsumer, BiConsumer)
+ * @see Collectors
+ */
+<R, A> R collect(Collector<? super T, A, R> collector);
+
+/*
+ * @param <R> type of the result
+ * @param supplier a function that creates a new result container. For a
+ *                 parallel execution, this function may be called
+ *                 multiple times and must return a fresh value each time.
+ * @param accumulator an associative, non-interfering, stateless function
+ *        for incorporating an additional element into a result
+ * @param combiner an associative, non-interfering, stateless function
+ *        for combining two values, which must be compatible with the
+ *        accumulator function
+ * @return the result of the reduction
+ */
 <R> R collect(Supplier<R> supplier,
                   BiConsumer<R, ? super T> accumulator,
                   BiConsumer<R, R> combiner);
 ```
+
 
 ### 附录A 中间操作和终端操作表
 | 操作      | 类型            | 返回类型           | 使用的类型/函数式接口 | 函数描述符    |
 | -------- | --------------- | ----------------- | ------------------ | ------------ |
 | filter   | 中间             | `Stream<T>`       | `Predicate<T>`     | T -> boolean |
 | distinct | 中间（有状态-无界）| `Stream<T>`       |                    |              |
+
+### 附录B 收集器工具类方法表
+`toList`
+`toSet`
+`toCollection`
