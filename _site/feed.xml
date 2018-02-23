@@ -1,5 +1,66 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://0.0.0.0:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://0.0.0.0:4000/" rel="alternate" type="text/html" /><updated>2018-02-22T19:14:01+08:00</updated><id>http://0.0.0.0:4000/</id><title type="html">小笔记</title><subtitle>simple site to write note.
-</subtitle><author><name>grimkeke</name></author><entry><title type="html">Stream读书笔记</title><link href="http://0.0.0.0:4000/java8/2018/01/14/know-stream-api.html" rel="alternate" type="text/html" title="Stream读书笔记" /><published>2018-01-14T11:57:44+08:00</published><updated>2018-01-14T11:57:44+08:00</updated><id>http://0.0.0.0:4000/java8/2018/01/14/know-stream-api</id><content type="html" xml:base="http://0.0.0.0:4000/java8/2018/01/14/know-stream-api.html">&lt;h2 id=&quot;什么是流&quot;&gt;什么是流&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://0.0.0.0:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://0.0.0.0:4000/" rel="alternate" type="text/html" /><updated>2018-02-23T16:50:56+08:00</updated><id>http://0.0.0.0:4000/</id><title type="html">小笔记</title><subtitle>simple site to write note.
+</subtitle><author><name>grimkeke</name></author><entry><title type="html">并行数据处理与性能读书笔记</title><link href="http://0.0.0.0:4000/java8/2018/02/23/know-parallel.html" rel="alternate" type="text/html" title="并行数据处理与性能读书笔记" /><published>2018-02-23T14:31:44+08:00</published><updated>2018-02-23T14:31:44+08:00</updated><id>http://0.0.0.0:4000/java8/2018/02/23/know-parallel</id><content type="html" xml:base="http://0.0.0.0:4000/java8/2018/02/23/know-parallel.html">&lt;h2 id=&quot;并行数据处理&quot;&gt;并行数据处理&lt;/h2&gt;
+&lt;p&gt;java7之前的数据集合并行处理非常麻烦，通常我们首先需要明确地将数据划分为若干子部分，
+第二需要为每一个子部分分配一个独立的线程，第三我们还需要在恰当的时候对这些线程进行同步
+来避免不希望出现的竞争条件，等待所有线程完成，最后把这些部分结果合并起来。java7开始
+引入了一个分支/合并的框架，让这些操作更稳定、更不易出错。&lt;/p&gt;
+&lt;h3 id=&quot;并行流&quot;&gt;并行流&lt;/h3&gt;
+&lt;p&gt;并行流可以通过对集合调用&lt;code class=&quot;highlighter-rouge&quot;&gt;parallelStream&lt;/code&gt;方法来生成。通过并行流，我们可以将集合中的
+数据分成多个块，使用不同的线程分别处理各个数据块的流，这样可以将工作分配到多核处理器
+的所有内核，让同一个任务操作并行起来。下面以对数字1到n进行累加和的计算为例，说明并行流
+的操作和性能优化。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// java7之前的迭代式对小于等于n的数字求和
+public long iterativeSum(long n) {
+    long result = 0;
+    for (long i = 0; i &amp;lt;= n; i++) {
+        result += i;
+    }
+    return result;
+}
+
+// java8之后通过流的归约完成数字求和
+public long sequentialSum(long n) {
+    return Stream.iterate(1L, i -&amp;gt; i + 1)  // 通过顺序迭代产生流
+                 .limit(n)                 // 限制只产生n个数字
+                 .reduce(Long::sum)        // 通过求和方法计算流中元素总和
+                 .get();                   // 因为不会为空，从Optional得到值
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;h3 id=&quot;将顺序流转换为并行流&quot;&gt;将顺序流转换为并行流&lt;/h3&gt;
+&lt;p&gt;通过对顺序流调用&lt;code class=&quot;highlighter-rouge&quot;&gt;parallel&lt;/code&gt;方法，可以将其标记转换为并行流。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public long parallelSum(long n) {
+    return Stream.iterate(1L, i -&amp;gt; i + 1)
+                 .limit(n)
+                 .parallel()  // 将顺序流转换为并行流
+                 .reduce(Long::sum)
+                 .get();
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;在实现中，对顺序流调用&lt;code class=&quot;highlighter-rouge&quot;&gt;parallel&lt;/code&gt;方法并不会改变流本身，而只是在流的内部设置了一个表示
+是否期望并行执行的&lt;code class=&quot;highlighter-rouge&quot;&gt;boolean&lt;/code&gt;标志位，如果设置为&lt;code class=&quot;highlighter-rouge&quot;&gt;true&lt;/code&gt;，则表示我们期望流操作按照并行的
+方式执行。而通过对并行流调用&lt;code class=&quot;highlighter-rouge&quot;&gt;sequential&lt;/code&gt;方法，我们可以将并行流转换为顺序流。注意我们
+已经了解流的实现机制，所以如下在同一个流中反复设置流的并行化和串行化的最终结果是以最后
+一次调用设置方法为准。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 我们期望先对filter使用串行，然后对map使用并行，但实际上整个流并行执行
+// 因为整个流会按最后parallel方法指定的标志进行操作
+stream.parallel()
+      .filter(...).sequential()
+      .map(...).parallel()
+      .reduce();
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;h3 id=&quot;并行流的线程池&quot;&gt;并行流的线程池&lt;/h3&gt;
+&lt;p&gt;并行流使用&lt;code class=&quot;highlighter-rouge&quot;&gt;ForkJoinPool&lt;/code&gt;提供的线程执行子集合的操作，它默认的线程数量是运行环境的处理器
+数量，这个值由&lt;code class=&quot;highlighter-rouge&quot;&gt;Runtime.getRuntime().availableProcessors()&lt;/code&gt;获得。使用该默认值
+对绝大多数情况都是不错的。&lt;/p&gt;
+
+&lt;h3 id=&quot;测量流性能&quot;&gt;测量流性能&lt;/h3&gt;
+&lt;p&gt;对于上面通过归约完成数字并行求和的例子，我们期望顺序流可以划分成若干子部分，每个子流
+分别在不同的内核执行计算，最后，同一个归约操作会将每个子流的结果合并起来，得到整个
+原始流的最终结果。而由于并行操作，我们期望执行时间会比顺序执行要快，下面我们通过一个
+性能测试来直观感受一下。&lt;/p&gt;</content><author><name>grimkeke</name></author><summary type="html">并行数据处理 java7之前的数据集合并行处理非常麻烦，通常我们首先需要明确地将数据划分为若干子部分， 第二需要为每一个子部分分配一个独立的线程，第三我们还需要在恰当的时候对这些线程进行同步 来避免不希望出现的竞争条件，等待所有线程完成，最后把这些部分结果合并起来。java7开始 引入了一个分支/合并的框架，让这些操作更稳定、更不易出错。 并行流 并行流可以通过对集合调用parallelStream方法来生成。通过并行流，我们可以将集合中的 数据分成多个块，使用不同的线程分别处理各个数据块的流，这样可以将工作分配到多核处理器 的所有内核，让同一个任务操作并行起来。下面以对数字1到n进行累加和的计算为例，说明并行流 的操作和性能优化。 ``` // java7之前的迭代式对小于等于n的数字求和 public long iterativeSum(long n) { long result = 0; for (long i = 0; i &amp;lt;= n; i++) { result += i; } return result; }</summary></entry><entry><title type="html">Stream读书笔记</title><link href="http://0.0.0.0:4000/java8/2018/01/14/know-stream-api.html" rel="alternate" type="text/html" title="Stream读书笔记" /><published>2018-01-14T11:57:44+08:00</published><updated>2018-01-14T11:57:44+08:00</updated><id>http://0.0.0.0:4000/java8/2018/01/14/know-stream-api</id><content type="html" xml:base="http://0.0.0.0:4000/java8/2018/01/14/know-stream-api.html">&lt;h2 id=&quot;什么是流&quot;&gt;什么是流&lt;/h2&gt;
 &lt;p&gt;流（Stream）是一组Java API，通过声明式的方式处理数据集合（类似于SQL，通过编写查询
 的语句，而不是亲自实现一个查询功能）。对比面向集合，亲自来实现集合操作，通过流，
 开发者可以关注于实现的目的，而非实现操作本身。对比如下两段功能一样的代码，查询菜品列表
