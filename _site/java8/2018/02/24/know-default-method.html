@@ -6,11 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>小笔记</title>
-  <meta name="description" content="simple site to write note.">
+  <title>默认方法读书笔记</title>
+  <meta name="description" content="什么是默认方法 我们知道在java7之前，接口中只能声明方法，而不能提供方法的实现，方法的实现应该在接口的 实现类，或实现了该接口的抽象类中提供。而在java8之后，我们在接口中通过default关键字， 可以为接口方法提供方法体，即声明并且实现了一个接口方法，而这个方法则称之为默认方法。例如 我们之所以能将集合...">
 
   <link rel="stylesheet" href="/assets/main.css">
-  <link rel="canonical" href="http://0.0.0.0:4000/">
+  <link rel="canonical" href="http://0.0.0.0:4000/java8/2018/02/24/know-default-method.html">
   <link rel="alternate" type="application/rss+xml" title="小笔记" href="/feed.xml">
   
   
@@ -60,76 +60,54 @@
 
     <main class="page-content" aria-label="Content">
       <div class="wrapper">
-        <div class="home">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 
-  <h1 class="page-heading">笔记</h1>
-  
-  
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">默认方法读书笔记</h1>
+    <p class="post-meta"><time datetime="2018-02-24T16:35:44+08:00" itemprop="datePublished">Feb 24, 2018</time></p>
+  </header>
 
-
-  <ul class="post-list">
-    
-      <li>
-        <span class="post-meta">Feb 24, 2018</span>
-
-        <h2>
-          <a class="post-link" href="/java8/2018/02/24/know-default-method.html">默认方法读书笔记</a>
-        </h2>
-      </li>
-    
-      <li>
-        <span class="post-meta">Feb 23, 2018</span>
-
-        <h2>
-          <a class="post-link" href="/java8/2018/02/23/know-parallel.html">并行数据处理与性能读书笔记</a>
-        </h2>
-      </li>
-    
-      <li>
-        <span class="post-meta">Jan 14, 2018</span>
-
-        <h2>
-          <a class="post-link" href="/java8/2018/01/14/know-stream-api.html">Stream读书笔记</a>
-        </h2>
-      </li>
-    
-      <li>
-        <span class="post-meta">Jan 12, 2018</span>
-
-        <h2>
-          <a class="post-link" href="/java8/2018/01/12/hello-world-to-java8.html">Hello World To Java8</a>
-        </h2>
-      </li>
-    
-      <li>
-        <span class="post-meta">May 9, 2017</span>
-
-        <h2>
-          <a class="post-link" href="/intellij/2017/05/09/how-to-change-default-jre-in-intellij-idea.html">How To Change Default JRE In IntelliJ Idea</a>
-        </h2>
-      </li>
-    
-      <li>
-        <span class="post-meta">Mar 26, 2017</span>
-
-        <h2>
-          <a class="post-link" href="/hello/2017/03/26/how-to-build-your-own-github-io-site.html">如何创建自己的github.io站点</a>
-        </h2>
-      </li>
-    
-      <li>
-        <span class="post-meta">Mar 26, 2017</span>
-
-        <h2>
-          <a class="post-link" href="/jekyll/update/2017/03/26/welcome-to-jekyll.html">Welcome to Jekyll!</a>
-        </h2>
-      </li>
-    
-  </ul>
-
-  <!--<p class="rss-subscribe">感兴趣可<a href="/feed.xml">点击RSS订阅</a></p>-->
-
+  <div class="post-content" itemprop="articleBody">
+    <h3 id="什么是默认方法">什么是默认方法</h3>
+<p>我们知道在java7之前，接口中只能声明方法，而不能提供方法的实现，方法的实现应该在接口的
+实现类，或实现了该接口的抽象类中提供。而在java8之后，我们在接口中通过<code class="highlighter-rouge">default</code>关键字，
+可以为接口方法提供方法体，即声明并且实现了一个接口方法，而这个方法则称之为默认方法。例如
+我们之所以能将集合通过<code class="highlighter-rouge">stream</code>方法转换为流，是因为在<code class="highlighter-rouge">Collection</code>接口中，提供了<code class="highlighter-rouge">stream</code>
+默认方法的实现。</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>default Stream&lt;E&gt; stream() {
+    return StreamSupport.stream(spliterator(), false);
+}
+</code></pre>
 </div>
+<p>由于对接口增加新的抽象方法会导致接口实现类同样需要增加相应方法的实现，因此，当类库设计者
+为接口添加新的方法后，会造成接口的使用者无法平滑兼容。而java8对库接口做了大量更新，比如
+<code class="highlighter-rouge">ArrayList</code>增加了<code class="highlighter-rouge">stream</code>方法，那么是否对应的接口实现类也需要做大量改动，实现对应的
+新增方法吗？我们注意到<code class="highlighter-rouge">ArrayList</code>并没有实现该方法，其父类<code class="highlighter-rouge">AbstractList</code>以及最高级
+抽象类<code class="highlighter-rouge">AbstractCollection</code>均没有实现该方法，<code class="highlighter-rouge">stream</code>方法是通过<code class="highlighter-rouge">AbstractCollection</code>
+实现的接口<code class="highlighter-rouge">Collection</code>提供的默认实现，也就是说在接口实现类无需修改的情况下，实现类
+自动继承了接口的默认方法，实现了类库的平滑升级。</p>
+<h3 id="接口支持静态方法">接口支持静态方法</h3>
+<p>java8除了引入默认方法，还允许我们在接口中声明静态方法。以前常用的模式是我们会定义接口
+以及提供对应的工具类，比如提供<code class="highlighter-rouge">Collection</code>接口然后提供<code class="highlighter-rouge">Collections</code>工具类。而工具类
+中的方法大多是与接口实例协作的静态方法，而现在接口中允许定义和实现静态方法后，我们可以
+将这部分静态方法转移到接口内部，因此工具类也就没有了存在的必要。</p>
+<h3 id="不同类型的兼容性">不同类型的兼容性</h3>
+<p>变更导致对java程序的影响大体可以分为如下三种类型的兼容性。</p>
+<ol>
+  <li>二进制级别的兼容性。对于二进制级别的兼容性来说，即使二进制文件发生了变动，但之前建立
+的链接依然有效，存量接口依然可以调用。如我们为接口增加了新的方法而不改变实现类，此时
+接口的</li>
+  <li>代码级别的兼容性。</li>
+  <li>方法级别的兼容性。
+    <h3 id="java8中的接口与抽象类">java8中的接口与抽象类</h3>
+  </li>
+</ol>
+
+
+  </div>
+
+  
+</article>
 
       </div>
     </main>

@@ -382,7 +382,7 @@ if (n &lt;= 1) {   // 初始两个数字0和1是不可分任务，直接返回
 整个任务的递归划分结束。而在任务拆分过程中，<code class="highlighter-rouge">characteristics</code>方法中的特性会对任务的
 划分造成影响。</p>
 <h3 id="实现自己的spliterator">实现自己的Spliterator</h3>
-
+<p>todo</p>
 <h3 id="附录a-通过benchmark框架评估性能">附录A 通过Benchmark框架评估性能</h3>
 <div class="highlighter-rouge"><pre class="highlight"><code>@State(Scope.Thread)
 @BenchmarkMode(Mode.AverageTime)
@@ -468,7 +468,7 @@ public class ParallelStreamBenchmark {
 <p>使用<code class="highlighter-rouge">maven package</code>打包，然后通过运行<code class="highlighter-rouge">java -jar benchmarks.jar</code>执行基准测试。
 或通过<code class="highlighter-rouge">IntelliJ IDEA</code>添加<code class="highlighter-rouge">org.openjdk.jmh.Main</code>类为执行主函数，在IDE中执行基准测试。
 在我的机器运行最终运行结果如下。从下面测试可以看到，使用原生顺序累加方式是最快的，甚至
-比通过分支/合并框架并行任务还要快。（疑问：why？）</p>
+比通过分支/合并框架并行任务还要快。（疑问：why？我们期望<code class="highlighter-rouge">parallelRangedSum</code>最快）</p>
 <div class="highlighter-rouge"><pre class="highlight"><code># Run complete. Total time: 00:01:49
 Benchmark                                  Mode  Cnt    Score    Error  Units
 ParallelStreamBenchmark.iterativeSum       avgt    4    4.834 ±  0.727  ms/op

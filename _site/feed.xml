@@ -1,5 +1,38 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://0.0.0.0:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://0.0.0.0:4000/" rel="alternate" type="text/html" /><updated>2018-02-24T11:58:20+08:00</updated><id>http://0.0.0.0:4000/</id><title type="html">小笔记</title><subtitle>simple site to write note.
-</subtitle><author><name>grimkeke</name></author><entry><title type="html">并行数据处理与性能读书笔记</title><link href="http://0.0.0.0:4000/java8/2018/02/23/know-parallel.html" rel="alternate" type="text/html" title="并行数据处理与性能读书笔记" /><published>2018-02-23T14:31:44+08:00</published><updated>2018-02-23T14:31:44+08:00</updated><id>http://0.0.0.0:4000/java8/2018/02/23/know-parallel</id><content type="html" xml:base="http://0.0.0.0:4000/java8/2018/02/23/know-parallel.html">&lt;h2 id=&quot;并行数据处理&quot;&gt;并行数据处理&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://0.0.0.0:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://0.0.0.0:4000/" rel="alternate" type="text/html" /><updated>2018-02-24T18:05:03+08:00</updated><id>http://0.0.0.0:4000/</id><title type="html">小笔记</title><subtitle>simple site to write note.
+</subtitle><author><name>grimkeke</name></author><entry><title type="html">默认方法读书笔记</title><link href="http://0.0.0.0:4000/java8/2018/02/24/know-default-method.html" rel="alternate" type="text/html" title="默认方法读书笔记" /><published>2018-02-24T16:35:44+08:00</published><updated>2018-02-24T16:35:44+08:00</updated><id>http://0.0.0.0:4000/java8/2018/02/24/know-default-method</id><content type="html" xml:base="http://0.0.0.0:4000/java8/2018/02/24/know-default-method.html">&lt;h3 id=&quot;什么是默认方法&quot;&gt;什么是默认方法&lt;/h3&gt;
+&lt;p&gt;我们知道在java7之前，接口中只能声明方法，而不能提供方法的实现，方法的实现应该在接口的
+实现类，或实现了该接口的抽象类中提供。而在java8之后，我们在接口中通过&lt;code class=&quot;highlighter-rouge&quot;&gt;default&lt;/code&gt;关键字，
+可以为接口方法提供方法体，即声明并且实现了一个接口方法，而这个方法则称之为默认方法。例如
+我们之所以能将集合通过&lt;code class=&quot;highlighter-rouge&quot;&gt;stream&lt;/code&gt;方法转换为流，是因为在&lt;code class=&quot;highlighter-rouge&quot;&gt;Collection&lt;/code&gt;接口中，提供了&lt;code class=&quot;highlighter-rouge&quot;&gt;stream&lt;/code&gt;
+默认方法的实现。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;default Stream&amp;lt;E&amp;gt; stream() {
+    return StreamSupport.stream(spliterator(), false);
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;由于对接口增加新的抽象方法会导致接口实现类同样需要增加相应方法的实现，因此，当类库设计者
+为接口添加新的方法后，会造成接口的使用者无法平滑兼容。而java8对库接口做了大量更新，比如
+&lt;code class=&quot;highlighter-rouge&quot;&gt;ArrayList&lt;/code&gt;增加了&lt;code class=&quot;highlighter-rouge&quot;&gt;stream&lt;/code&gt;方法，那么是否对应的接口实现类也需要做大量改动，实现对应的
+新增方法吗？我们注意到&lt;code class=&quot;highlighter-rouge&quot;&gt;ArrayList&lt;/code&gt;并没有实现该方法，其父类&lt;code class=&quot;highlighter-rouge&quot;&gt;AbstractList&lt;/code&gt;以及最高级
+抽象类&lt;code class=&quot;highlighter-rouge&quot;&gt;AbstractCollection&lt;/code&gt;均没有实现该方法，&lt;code class=&quot;highlighter-rouge&quot;&gt;stream&lt;/code&gt;方法是通过&lt;code class=&quot;highlighter-rouge&quot;&gt;AbstractCollection&lt;/code&gt;
+实现的接口&lt;code class=&quot;highlighter-rouge&quot;&gt;Collection&lt;/code&gt;提供的默认实现，也就是说在接口实现类无需修改的情况下，实现类
+自动继承了接口的默认方法，实现了类库的平滑升级。&lt;/p&gt;
+&lt;h3 id=&quot;接口支持静态方法&quot;&gt;接口支持静态方法&lt;/h3&gt;
+&lt;p&gt;java8除了引入默认方法，还允许我们在接口中声明静态方法。以前常用的模式是我们会定义接口
+以及提供对应的工具类，比如提供&lt;code class=&quot;highlighter-rouge&quot;&gt;Collection&lt;/code&gt;接口然后提供&lt;code class=&quot;highlighter-rouge&quot;&gt;Collections&lt;/code&gt;工具类。而工具类
+中的方法大多是与接口实例协作的静态方法，而现在接口中允许定义和实现静态方法后，我们可以
+将这部分静态方法转移到接口内部，因此工具类也就没有了存在的必要。&lt;/p&gt;
+&lt;h3 id=&quot;不同类型的兼容性&quot;&gt;不同类型的兼容性&lt;/h3&gt;
+&lt;p&gt;变更导致对java程序的影响大体可以分为如下三种类型的兼容性。&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;二进制级别的兼容性。对于二进制级别的兼容性来说，即使二进制文件发生了变动，但之前建立
+的链接依然有效，存量接口依然可以调用。如我们为接口增加了新的方法而不改变实现类，此时
+接口的&lt;/li&gt;
+  &lt;li&gt;代码级别的兼容性。&lt;/li&gt;
+  &lt;li&gt;方法级别的兼容性。
+    &lt;h3 id=&quot;java8中的接口与抽象类&quot;&gt;java8中的接口与抽象类&lt;/h3&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;</content><author><name>grimkeke</name></author><summary type="html">什么是默认方法 我们知道在java7之前，接口中只能声明方法，而不能提供方法的实现，方法的实现应该在接口的 实现类，或实现了该接口的抽象类中提供。而在java8之后，我们在接口中通过default关键字， 可以为接口方法提供方法体，即声明并且实现了一个接口方法，而这个方法则称之为默认方法。例如 我们之所以能将集合通过stream方法转换为流，是因为在Collection接口中，提供了stream 默认方法的实现。 default Stream&amp;lt;E&amp;gt; stream() { return StreamSupport.stream(spliterator(), false); } 由于对接口增加新的抽象方法会导致接口实现类同样需要增加相应方法的实现，因此，当类库设计者 为接口添加新的方法后，会造成接口的使用者无法平滑兼容。而java8对库接口做了大量更新，比如 ArrayList增加了stream方法，那么是否对应的接口实现类也需要做大量改动，实现对应的 新增方法吗？我们注意到ArrayList并没有实现该方法，其父类AbstractList以及最高级 抽象类AbstractCollection均没有实现该方法，stream方法是通过AbstractCollection 实现的接口Collection提供的默认实现，也就是说在接口实现类无需修改的情况下，实现类 自动继承了接口的默认方法，实现了类库的平滑升级。 接口支持静态方法 java8除了引入默认方法，还允许我们在接口中声明静态方法。以前常用的模式是我们会定义接口 以及提供对应的工具类，比如提供Collection接口然后提供Collections工具类。而工具类 中的方法大多是与接口实例协作的静态方法，而现在接口中允许定义和实现静态方法后，我们可以 将这部分静态方法转移到接口内部，因此工具类也就没有了存在的必要。 不同类型的兼容性 变更导致对java程序的影响大体可以分为如下三种类型的兼容性。 二进制级别的兼容性。对于二进制级别的兼容性来说，即使二进制文件发生了变动，但之前建立 的链接依然有效，存量接口依然可以调用。如我们为接口增加了新的方法而不改变实现类，此时 接口的 代码级别的兼容性。 方法级别的兼容性。 java8中的接口与抽象类</summary></entry><entry><title type="html">并行数据处理与性能读书笔记</title><link href="http://0.0.0.0:4000/java8/2018/02/23/know-parallel.html" rel="alternate" type="text/html" title="并行数据处理与性能读书笔记" /><published>2018-02-23T14:31:44+08:00</published><updated>2018-02-23T14:31:44+08:00</updated><id>http://0.0.0.0:4000/java8/2018/02/23/know-parallel</id><content type="html" xml:base="http://0.0.0.0:4000/java8/2018/02/23/know-parallel.html">&lt;h2 id=&quot;并行数据处理&quot;&gt;并行数据处理&lt;/h2&gt;
 &lt;p&gt;java7之前的数据集合并行处理非常麻烦，通常我们首先需要明确地将数据划分为若干子部分，
 第二需要为每一个子部分分配一个独立的线程，第三我们还需要在恰当的时候对这些线程进行同步
 来避免不希望出现的竞争条件，等待所有线程完成，最后把这些部分结果合并起来。java7开始
@@ -313,7 +346,7 @@ if (n &amp;lt;= 1) {   // 初始两个数字0和1是不可分任务，直接返�
 整个任务的递归划分结束。而在任务拆分过程中，&lt;code class=&quot;highlighter-rouge&quot;&gt;characteristics&lt;/code&gt;方法中的特性会对任务的
 划分造成影响。&lt;/p&gt;
 &lt;h3 id=&quot;实现自己的spliterator&quot;&gt;实现自己的Spliterator&lt;/h3&gt;
-
+&lt;p&gt;todo&lt;/p&gt;
 &lt;h3 id=&quot;附录a-通过benchmark框架评估性能&quot;&gt;附录A 通过Benchmark框架评估性能&lt;/h3&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@State(Scope.Thread)
 @BenchmarkMode(Mode.AverageTime)
@@ -399,7 +432,7 @@ public class ParallelStreamBenchmark {
 &lt;p&gt;使用&lt;code class=&quot;highlighter-rouge&quot;&gt;maven package&lt;/code&gt;打包，然后通过运行&lt;code class=&quot;highlighter-rouge&quot;&gt;java -jar benchmarks.jar&lt;/code&gt;执行基准测试。
 或通过&lt;code class=&quot;highlighter-rouge&quot;&gt;IntelliJ IDEA&lt;/code&gt;添加&lt;code class=&quot;highlighter-rouge&quot;&gt;org.openjdk.jmh.Main&lt;/code&gt;类为执行主函数，在IDE中执行基准测试。
 在我的机器运行最终运行结果如下。从下面测试可以看到，使用原生顺序累加方式是最快的，甚至
-比通过分支/合并框架并行任务还要快。（疑问：why？）&lt;/p&gt;
+比通过分支/合并框架并行任务还要快。（疑问：why？我们期望&lt;code class=&quot;highlighter-rouge&quot;&gt;parallelRangedSum&lt;/code&gt;最快）&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# Run complete. Total time: 00:01:49
 Benchmark                                  Mode  Cnt    Score    Error  Units
 ParallelStreamBenchmark.iterativeSum       avgt    4    4.834 ±  0.727  ms/op

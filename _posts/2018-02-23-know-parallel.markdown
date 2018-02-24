@@ -311,7 +311,7 @@ public interface Spliterator<T> {
 整个任务的递归划分结束。而在任务拆分过程中，`characteristics`方法中的特性会对任务的
 划分造成影响。
 ### 实现自己的Spliterator
-
+todo
 ### 附录A 通过Benchmark框架评估性能
 ```
 @State(Scope.Thread)
@@ -397,7 +397,7 @@ public class ParallelStreamBenchmark {
 使用`maven package`打包，然后通过运行`java -jar benchmarks.jar`执行基准测试。
 或通过`IntelliJ IDEA`添加`org.openjdk.jmh.Main`类为执行主函数，在IDE中执行基准测试。
 在我的机器运行最终运行结果如下。从下面测试可以看到，使用原生顺序累加方式是最快的，甚至
-比通过分支/合并框架并行任务还要快。（疑问：why？）
+比通过分支/合并框架并行任务还要快。（疑问：why？我们期望`parallelRangedSum`最快）
 ```
 # Run complete. Total time: 00:01:49
 Benchmark                                  Mode  Cnt    Score    Error  Units
