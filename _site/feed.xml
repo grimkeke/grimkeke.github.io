@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://0.0.0.0:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://0.0.0.0:4000/" rel="alternate" type="text/html" /><updated>2018-02-26T17:01:02+08:00</updated><id>http://0.0.0.0:4000/</id><title type="html">小笔记</title><subtitle>simple site to write note.
-</subtitle><author><name>grimkeke</name></author><entry><title type="html">默认方法读书笔记</title><link href="http://0.0.0.0:4000/java8/2018/02/24/know-default-method.html" rel="alternate" type="text/html" title="默认方法读书笔记" /><published>2018-02-24T16:35:44+08:00</published><updated>2018-02-24T16:35:44+08:00</updated><id>http://0.0.0.0:4000/java8/2018/02/24/know-default-method</id><content type="html" xml:base="http://0.0.0.0:4000/java8/2018/02/24/know-default-method.html">&lt;h3 id=&quot;什么是默认方法&quot;&gt;什么是默认方法&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://0.0.0.0:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://0.0.0.0:4000/" rel="alternate" type="text/html" /><updated>2018-02-26T17:57:04+08:00</updated><id>http://0.0.0.0:4000/</id><title type="html">小笔记</title><subtitle>simple site to write note.
+</subtitle><author><name>grimkeke</name></author><entry><title type="html">Optional读书笔记</title><link href="http://0.0.0.0:4000/java8/2018/02/26/know-optional.html" rel="alternate" type="text/html" title="Optional读书笔记" /><published>2018-02-26T17:56:44+08:00</published><updated>2018-02-26T17:56:44+08:00</updated><id>http://0.0.0.0:4000/java8/2018/02/26/know-optional</id><content type="html" xml:base="http://0.0.0.0:4000/java8/2018/02/26/know-optional.html">&lt;h2 id=&quot;使用optional取代null&quot;&gt;使用Optional取代null&lt;/h2&gt;</content><author><name>grimkeke</name></author><summary type="html">使用Optional取代null</summary></entry><entry><title type="html">CompletableFuture读书笔记</title><link href="http://0.0.0.0:4000/java8/2018/02/26/know-completable-future.html" rel="alternate" type="text/html" title="CompletableFuture读书笔记" /><published>2018-02-26T17:54:44+08:00</published><updated>2018-02-26T17:54:44+08:00</updated><id>http://0.0.0.0:4000/java8/2018/02/26/know-completable-future</id><content type="html" xml:base="http://0.0.0.0:4000/java8/2018/02/26/know-completable-future.html">&lt;h2 id=&quot;组合式异步编程&quot;&gt;组合式异步编程&lt;/h2&gt;</content><author><name>grimkeke</name></author><summary type="html">组合式异步编程</summary></entry><entry><title type="html">Default Method读书笔记</title><link href="http://0.0.0.0:4000/java8/2018/02/24/know-default-method.html" rel="alternate" type="text/html" title="Default Method读书笔记" /><published>2018-02-24T16:35:44+08:00</published><updated>2018-02-24T16:35:44+08:00</updated><id>http://0.0.0.0:4000/java8/2018/02/24/know-default-method</id><content type="html" xml:base="http://0.0.0.0:4000/java8/2018/02/24/know-default-method.html">&lt;h2 id=&quot;什么是默认方法&quot;&gt;什么是默认方法&lt;/h2&gt;
 &lt;p&gt;我们知道在java7之前，接口中只能声明方法，而不能提供方法的实现，方法的实现应该在接口的
 实现类，或实现了该接口的抽象类中提供。而在java8之后，我们在接口中通过&lt;code class=&quot;highlighter-rouge&quot;&gt;default&lt;/code&gt;关键字，
 可以为接口方法提供方法体，即声明并且实现了一个接口方法，而这个方法则称之为默认方法。例如
@@ -17,12 +17,12 @@
 抽象类&lt;code class=&quot;highlighter-rouge&quot;&gt;AbstractCollection&lt;/code&gt;均没有实现该方法，&lt;code class=&quot;highlighter-rouge&quot;&gt;stream&lt;/code&gt;方法是通过&lt;code class=&quot;highlighter-rouge&quot;&gt;AbstractCollection&lt;/code&gt;
 实现的接口&lt;code class=&quot;highlighter-rouge&quot;&gt;Collection&lt;/code&gt;提供的默认实现，也就是说在接口实现类无需修改的情况下，实现类
 自动继承了接口的默认方法，实现了类库的平滑升级。&lt;/p&gt;
-&lt;h3 id=&quot;接口支持静态方法&quot;&gt;接口支持静态方法&lt;/h3&gt;
+&lt;h2 id=&quot;接口支持静态方法&quot;&gt;接口支持静态方法&lt;/h2&gt;
 &lt;p&gt;java8除了引入默认方法，还允许我们在接口中声明静态方法。以前常用的模式是我们会定义接口
 以及提供对应的工具类，比如提供&lt;code class=&quot;highlighter-rouge&quot;&gt;Collection&lt;/code&gt;接口然后提供&lt;code class=&quot;highlighter-rouge&quot;&gt;Collections&lt;/code&gt;工具类。而工具类
 中的方法大多是与接口实例协作的静态方法，而现在接口中允许定义和实现静态方法后，我们可以
 将这部分静态方法转移到接口内部，因此工具类也就没有了存在的必要。&lt;/p&gt;
-&lt;h3 id=&quot;不同类型的兼容性&quot;&gt;不同类型的兼容性&lt;/h3&gt;
+&lt;h2 id=&quot;不同类型的兼容性&quot;&gt;不同类型的兼容性&lt;/h2&gt;
 &lt;p&gt;变更导致对java程序的影响大体可以分为如下三种类型的兼容性。&lt;/p&gt;
 &lt;ol&gt;
   &lt;li&gt;二进制的兼容性。对于二进制级别的兼容性来说，即使二进制文件发生了改变，但对于新老
@@ -36,7 +36,7 @@
 可以是变更接口的实现，也可以是增加新的接口（只要新的接口不被调用）&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h3 id=&quot;java8中的接口与抽象类&quot;&gt;java8中的接口与抽象类&lt;/h3&gt;
+&lt;h2 id=&quot;java8中的接口与抽象类&quot;&gt;java8中的接口与抽象类&lt;/h2&gt;
 &lt;p&gt;虽然java8中的接口和抽象类都能包含抽象方法和提供方法的实现，但是它们之间依然存在如下
 本质区别。&lt;/p&gt;
 &lt;ol&gt;
@@ -45,7 +45,7 @@
   &lt;li&gt;抽象类中可以定义成员变量，通过实例变量来保存一个通用状态，而接口中无法定义实例变量。&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h3 id=&quot;默认方法的用途&quot;&gt;默认方法的用途&lt;/h3&gt;
+&lt;h2 id=&quot;默认方法的用途&quot;&gt;默认方法的用途&lt;/h2&gt;
 &lt;p&gt;除了上述为类库开发者提供了一种平滑升级库的方案外，默认方法在普通的业务开发者中也有用武之地。
 比如开发者定义了一个接口，这个接口中包含了一些需要实现类提供的方法，同时，也可以包含一些
 实现类可选的默认方法，比如一个接口提供了新增、查询和删除的方法，但是删除操作对于这个接口
@@ -62,7 +62,7 @@
 }
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
-&lt;h4 id=&quot;行为的多继承&quot;&gt;行为的多继承&lt;/h4&gt;
+&lt;h3 id=&quot;行为的多继承&quot;&gt;行为的多继承&lt;/h3&gt;
 &lt;p&gt;由于一个类可以继承多个接口，而接口中由于提供了默认方法，因此我们可以得到一个类拥有多继承
 的效果，而在多继承中，接口的精致性和正交性可以最大程度帮助我们实现代码复用和行为组合。
 关于精致性是说一个接口处理的行为是内聚的，只做一种类型相关的事情。而正交性表明两个接口
@@ -73,13 +73,13 @@
 了移动和旋转的特性，为太阳提供了这部分通用能力。同理，我们也可以组合其他接口，为其他
 类提供代码复用和能力复用。这样做还有一个好处，就是当我们在接口中修改默认方法的逻辑，所有
 实现了该默认方法的实现类均会自动继承新的代码。（只要实现类没有覆盖默认方法）&lt;/p&gt;
-&lt;h4 id=&quot;对于使用继承的错误观点&quot;&gt;对于使用继承的错误观点&lt;/h4&gt;
+&lt;h3 id=&quot;对于使用继承的错误观点&quot;&gt;对于使用继承的错误观点&lt;/h3&gt;
 &lt;p&gt;很多人一听到代码复用就想通过继承来实现，而继承并不是在任何时候都合适的。比如对一个拥有
 100个方法的类进行继承，而我们仅仅是需要使用其中的若干个方法。如果继承了这个类，那么我们
 的子类就会拥有很多并不需要的方法，这些暴露的方法会造成不必要的复杂性。这种情况下完全可以
 通过代理的方式来实现，通过在实现类中引用拥有100个方法的类或接口，然后由实现类提供我们
 需要的若干个方法，这些方法实际上是通过直接调用所引用的类来实现。&lt;/p&gt;
-&lt;h3 id=&quot;解决冲突的规则&quot;&gt;解决冲突的规则&lt;/h3&gt;
+&lt;h2 id=&quot;解决冲突的规则&quot;&gt;解决冲突的规则&lt;/h2&gt;
 &lt;p&gt;由于一个类能够实现多个接口，而这些接口中如果出现了签名相同的默认方法，那么子类将会遇到
 方法签名的冲突。为了解决一个类同时继承了两个拥有相同方法签名接口的问题。java8定义了如下
 的冲突处理规则&lt;/p&gt;
@@ -88,51 +88,53 @@
   &lt;li&gt;如果无法依据第一条判断，那么子接口的优先级更高。函数签名相同时，优先选择拥有最具体
 实现的默认方法的接口，即如果B继承了A，那么B就比A更具体。&lt;/li&gt;
   &lt;li&gt;最后如果还是无法判断，集成了多个接口的类则必须通过显式覆盖和调用期望的方法，显式地
-选择使用哪一个默认方法的实现。否则会编译不通过。
-    &lt;h3 id=&quot;规则实践&quot;&gt;规则实践&lt;/h3&gt;
-    &lt;p&gt;当要判断一个类中的方法是继承自哪一个父类或者接口提供的默认方法时，只要遵守解决冲突的三条
+选择使用哪一个默认方法的实现。否则会编译不通过。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;规则实践&quot;&gt;规则实践&lt;/h2&gt;
+&lt;p&gt;当要判断一个类中的方法是继承自哪一个父类或者接口提供的默认方法时，只要遵守解决冲突的三条
 规则即可。首先看类或者父类是否有提供方法的实现，如果有则优先使用该方法；如果第一条不满足，
 则看与类最具体实现的父类或者接口是否有提供方法的实现。最具体可以理解为与调用方类最接近的
 父类或者接口。当上面两个规则依然不满足时，我们只能覆盖类中的相同签名的方法，提供自己的实现，
 或者显式地指定需要调用哪一个父类方法或父接口默认方法。下面看一些具体的例子。&lt;/p&gt;
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public class MostSpecific{
- public static void main(String... args) {
-     new C().hello(); // B
-     new D().hello(); // A
-     new E().hello(); // B
-     new F().hello(); // F
-     new G().hello(); // F
- }
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public class MostSpecific{
+    public static void main(String... args) {
+        new C().hello(); // B
+        new D().hello(); // A
+        new E().hello(); // B
+        new F().hello(); // F
+        new G().hello(); // F
+    }
 
- interface A{
-     default void hello() {
-         System.out.println(&quot;Hello from A&quot;);
-     }
- }
+    interface A{
+        default void hello() {
+            System.out.println(&quot;Hello from A&quot;);
+        }
+    }
 
- interface B extends A{
-     default void hello() {
-         System.out.println(&quot;Hello from B&quot;);
-     }
- }
+    interface B extends A{
+        default void hello() {
+            System.out.println(&quot;Hello from B&quot;);
+        }
+    }
 
- static class C implements B, A {}
+    static class C implements B, A {}
 
- static class D implements A {}
+    static class D implements A {}
 
- static class E extends D implements B, A{}
+    static class E extends D implements B, A{}
 
- static class F implements B, A {
-     public void hello() {
-         System.out.println(&quot;Hello from F&quot;);
-     }
- }
+    static class F implements B, A {
+        public void hello() {
+            System.out.println(&quot;Hello from F&quot;);
+        }
+    }
 
- static class G extends F implements B, A{}
+    static class G extends F implements B, A{}
 }
 &lt;/code&gt;&lt;/pre&gt;
-    &lt;/div&gt;
-    &lt;p&gt;对于类C，根据第一条规则，类C并没有提供&lt;code class=&quot;highlighter-rouge&quot;&gt;hello&lt;/code&gt;方法的实现，然后看第二条规则，C继承了B和A
+&lt;/div&gt;
+&lt;p&gt;对于类C，根据第一条规则，类C并没有提供&lt;code class=&quot;highlighter-rouge&quot;&gt;hello&lt;/code&gt;方法的实现，然后看第二条规则，C继承了B和A
 接口，而因为B继承A接口，因此B接口比A接口更为具体，所以C应该使用B接口提供的默认方法。
 对于类D，根据第一条规则，D没有提供方法实现，D只有一个接口A，因此使用A的默认方法。
 对于类E，根据第一条规则，E和父类D均没有提供方法实现，而接口B和A中，B更为具体，因此B中
@@ -140,74 +142,72 @@
 对于类F，根据第一条规则，F实现了&lt;code class=&quot;highlighter-rouge&quot;&gt;hello&lt;/code&gt;方法，因此直接调用F中的方法。
 对于类G，根据第一条规则，G虽然没有提供方法实现，但是G的父类F提供了方法实现，因此直接
 调用F中的方法。&lt;/p&gt;
-    &lt;h4 id=&quot;更多的实践&quot;&gt;更多的实践&lt;/h4&gt;
-    &lt;p&gt;当类C实现了包含相同签名方法的接口A和接口B，并且A和B并没有任何关系时，如果类C没有实现
+&lt;h3 id=&quot;更多的实践&quot;&gt;更多的实践&lt;/h3&gt;
+&lt;p&gt;当类C实现了包含相同签名方法的接口A和接口B，并且A和B并没有任何关系时，如果类C没有实现
 &lt;code class=&quot;highlighter-rouge&quot;&gt;hello&lt;/code&gt;方法，那么根据第一规则，类中没有方法实现，父类也没有，不满足第一规则。而根据第二
 规则，接口A和B都是类C的直接实现接口，层级一样，因此第二规则也无法判断。所以最终到第三
 规则，而第三规则告诉我们，我们必须要重写&lt;code class=&quot;highlighter-rouge&quot;&gt;hello&lt;/code&gt;方法，否则会编译错误。而如果我们想直接
 使用A接口的默认方法，则需要在重写的方法里显式地调用A接口的默认方法，即&lt;code class=&quot;highlighter-rouge&quot;&gt;A.super.hello()&lt;/code&gt;。&lt;/p&gt;
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public class Ambiguous{
- public static void main(String... args) {
-     new C().hello();
- }
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public class Ambiguous{
+    public static void main(String... args) {
+        new C().hello();
+    }
 
- interface A {
-     default void hello() {
-         System.out.println(&quot;Hello from A&quot;);
-     }
- }
+    interface A {
+        default void hello() {
+            System.out.println(&quot;Hello from A&quot;);
+        }
+    }
 
- interface B {
-     default void hello() {
-         System.out.println(&quot;Hello from B&quot;);
-     }
- }
+    interface B {
+        default void hello() {
+            System.out.println(&quot;Hello from B&quot;);
+        }
+    }
 
- static class C implements B, A {
-     // 必须显式地覆盖hello方法，提供自己的实现，或显式地调用需要调用的同签名方法
-     public void hello(){
-         A.super.hello();
-     }
- }
+    static class C implements B, A {
+        // 必须显式地覆盖hello方法，提供自己的实现，或显式地调用需要调用的同签名方法
+        public void hello(){
+            A.super.hello();
+        }
+    }
 }
 &lt;/code&gt;&lt;/pre&gt;
-    &lt;/div&gt;
-    &lt;h3 id=&quot;菱形继承问题&quot;&gt;菱形继承问题&lt;/h3&gt;
-    &lt;p&gt;所谓菱形继承问题，是说ABCD的继承关系是一个菱形，首先BC接口均继承自A，而类D实现了BC接口，
+&lt;/div&gt;
+&lt;h2 id=&quot;菱形继承问题&quot;&gt;菱形继承问题&lt;/h2&gt;
+&lt;p&gt;所谓菱形继承问题，是说ABCD的继承关系是一个菱形，首先BC接口均继承自A，而类D实现了BC接口，
 那么在这种情况下，D方法究竟会输出什么？使用第一规则，类D没有提供&lt;code class=&quot;highlighter-rouge&quot;&gt;hello&lt;/code&gt;方法，并且也没有
 父类。再看第二规则，B和C均为D类的直接继承接口，而实际上因为只有A接口提供了&lt;code class=&quot;highlighter-rouge&quot;&gt;hello&lt;/code&gt;方法
 的实现，因此最终D的结果会执行A接口的默认方法。&lt;/p&gt;
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public class Diamond{
- public static void main(String...args){
-     new D().hello();
- }
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public class Diamond{
+    public static void main(String...args){
+        new D().hello();
+    }
 
- interface A{
-     default void hello(){
-         System.out.println(&quot;Hello from A&quot;);
-     }
- }
+    interface A{
+        default void hello(){
+            System.out.println(&quot;Hello from A&quot;);
+        }
+    }
 
- interface B extends A {}
+    interface B extends A {}
 
- interface C extends A {}
+    interface C extends A {}
 
- static class D implements B, C {}
+    static class D implements B, C {}
 }
 &lt;/code&gt;&lt;/pre&gt;
-    &lt;/div&gt;
-    &lt;p&gt;我们继续引申这个问题。如果接口C提供了相同签名的&lt;code class=&quot;highlighter-rouge&quot;&gt;hello&lt;/code&gt;方法，那么根据第二原则，因为C提供了
+&lt;/div&gt;
+&lt;p&gt;我们继续引申这个问题。如果接口C提供了相同签名的&lt;code class=&quot;highlighter-rouge&quot;&gt;hello&lt;/code&gt;方法，那么根据第二原则，因为C提供了
 默认方法，比接口A更具体一些，因此接口C的方法会被调用。如果接口C提供的只是相同签名的抽象
 方法，而不是默认方法，结果会怎样？同样根据规则二，因为C接口相对A更加具体，因此需要调用
 接口C的方法，而接口C中只是定义了一个抽象方法，所以编译器要求类D实现该方法，否则该程序
-无法通过编译。&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;</content><author><name>grimkeke</name></author><summary type="html">什么是默认方法 我们知道在java7之前，接口中只能声明方法，而不能提供方法的实现，方法的实现应该在接口的 实现类，或实现了该接口的抽象类中提供。而在java8之后，我们在接口中通过default关键字， 可以为接口方法提供方法体，即声明并且实现了一个接口方法，而这个方法则称之为默认方法。例如 我们之所以能将集合通过stream方法转换为流，是因为在Collection接口中，提供了stream 默认方法的实现。 default Stream&amp;lt;E&amp;gt; stream() { return StreamSupport.stream(spliterator(), false); } 由于对接口增加新的抽象方法会导致接口实现类同样需要增加相应方法的实现，因此，当类库设计者 为接口添加新的方法后，会造成接口的使用者无法平滑兼容。而java8对库接口做了大量更新，比如 ArrayList增加了stream方法，那么是否对应的接口实现类也需要做大量改动，实现对应的 新增方法吗？我们注意到ArrayList并没有实现该方法，其父类AbstractList以及最高级 抽象类AbstractCollection均没有实现该方法，stream方法是通过AbstractCollection 实现的接口Collection提供的默认实现，也就是说在接口实现类无需修改的情况下，实现类 自动继承了接口的默认方法，实现了类库的平滑升级。 接口支持静态方法 java8除了引入默认方法，还允许我们在接口中声明静态方法。以前常用的模式是我们会定义接口 以及提供对应的工具类，比如提供Collection接口然后提供Collections工具类。而工具类 中的方法大多是与接口实例协作的静态方法，而现在接口中允许定义和实现静态方法后，我们可以 将这部分静态方法转移到接口内部，因此工具类也就没有了存在的必要。 不同类型的兼容性 变更导致对java程序的影响大体可以分为如下三种类型的兼容性。 二进制的兼容性。对于二进制级别的兼容性来说，即使二进制文件发生了改变，但对于新老 二进制执行文件依然能无缝进行验证、准备和解析，二进制文件之间的链接依然有效。如我们为 接口增加了新的方法而不改变实现类，此时只要我们不调用新方法，就不会出现运行时错误，而老 的接口依然可以成功调用。 源代码的兼容性。表示引入代码变化后，现有的程序依然能通过编译。比如我们向接口添加 新的方法就不是源代码兼容性，因为需要依赖所有子类实现新方法。而为接口添加默认方法或者 静态方法则是源代码兼容的，因为添加只有程序依然可以成功编译。 函数行为的兼容性。表示变更之后，程序接收同样的输入依然能得到相同的结果。关于变更， 可以是变更接口的实现，也可以是增加新的接口（只要新的接口不被调用）</summary></entry><entry><title type="html">并行数据处理与性能读书笔记</title><link href="http://0.0.0.0:4000/java8/2018/02/23/know-parallel.html" rel="alternate" type="text/html" title="并行数据处理与性能读书笔记" /><published>2018-02-23T14:31:44+08:00</published><updated>2018-02-23T14:31:44+08:00</updated><id>http://0.0.0.0:4000/java8/2018/02/23/know-parallel</id><content type="html" xml:base="http://0.0.0.0:4000/java8/2018/02/23/know-parallel.html">&lt;h2 id=&quot;并行数据处理&quot;&gt;并行数据处理&lt;/h2&gt;
+无法通过编译。&lt;/p&gt;</content><author><name>grimkeke</name></author><summary type="html">什么是默认方法 我们知道在java7之前，接口中只能声明方法，而不能提供方法的实现，方法的实现应该在接口的 实现类，或实现了该接口的抽象类中提供。而在java8之后，我们在接口中通过default关键字， 可以为接口方法提供方法体，即声明并且实现了一个接口方法，而这个方法则称之为默认方法。例如 我们之所以能将集合通过stream方法转换为流，是因为在Collection接口中，提供了stream 默认方法的实现。 default Stream&amp;lt;E&amp;gt; stream() { return StreamSupport.stream(spliterator(), false); } 由于对接口增加新的抽象方法会导致接口实现类同样需要增加相应方法的实现，因此，当类库设计者 为接口添加新的方法后，会造成接口的使用者无法平滑兼容。而java8对库接口做了大量更新，比如 ArrayList增加了stream方法，那么是否对应的接口实现类也需要做大量改动，实现对应的 新增方法吗？我们注意到ArrayList并没有实现该方法，其父类AbstractList以及最高级 抽象类AbstractCollection均没有实现该方法，stream方法是通过AbstractCollection 实现的接口Collection提供的默认实现，也就是说在接口实现类无需修改的情况下，实现类 自动继承了接口的默认方法，实现了类库的平滑升级。 接口支持静态方法 java8除了引入默认方法，还允许我们在接口中声明静态方法。以前常用的模式是我们会定义接口 以及提供对应的工具类，比如提供Collection接口然后提供Collections工具类。而工具类 中的方法大多是与接口实例协作的静态方法，而现在接口中允许定义和实现静态方法后，我们可以 将这部分静态方法转移到接口内部，因此工具类也就没有了存在的必要。 不同类型的兼容性 变更导致对java程序的影响大体可以分为如下三种类型的兼容性。 二进制的兼容性。对于二进制级别的兼容性来说，即使二进制文件发生了改变，但对于新老 二进制执行文件依然能无缝进行验证、准备和解析，二进制文件之间的链接依然有效。如我们为 接口增加了新的方法而不改变实现类，此时只要我们不调用新方法，就不会出现运行时错误，而老 的接口依然可以成功调用。 源代码的兼容性。表示引入代码变化后，现有的程序依然能通过编译。比如我们向接口添加 新的方法就不是源代码兼容性，因为需要依赖所有子类实现新方法。而为接口添加默认方法或者 静态方法则是源代码兼容的，因为添加只有程序依然可以成功编译。 函数行为的兼容性。表示变更之后，程序接收同样的输入依然能得到相同的结果。关于变更， 可以是变更接口的实现，也可以是增加新的接口（只要新的接口不被调用）</summary></entry><entry><title type="html">并行数据处理与性能读书笔记</title><link href="http://0.0.0.0:4000/java8/2018/02/23/know-parallel.html" rel="alternate" type="text/html" title="并行数据处理与性能读书笔记" /><published>2018-02-23T14:31:44+08:00</published><updated>2018-02-23T14:31:44+08:00</updated><id>http://0.0.0.0:4000/java8/2018/02/23/know-parallel</id><content type="html" xml:base="http://0.0.0.0:4000/java8/2018/02/23/know-parallel.html">&lt;h2 id=&quot;并行数据处理&quot;&gt;并行数据处理&lt;/h2&gt;
 &lt;p&gt;java7之前的数据集合并行处理非常麻烦，通常我们首先需要明确地将数据划分为若干子部分，
 第二需要为每一个子部分分配一个独立的线程，第三我们还需要在恰当的时候对这些线程进行同步
 来避免不希望出现的竞争条件，等待所有线程完成，最后把这些部分结果合并起来。java7开始
 引入了一个分支/合并的框架，让这些操作更稳定、更不易出错。&lt;/p&gt;
-&lt;h3 id=&quot;并行流&quot;&gt;并行流&lt;/h3&gt;
+&lt;h2 id=&quot;并行流&quot;&gt;并行流&lt;/h2&gt;
 &lt;p&gt;并行流可以通过对集合调用&lt;code class=&quot;highlighter-rouge&quot;&gt;parallelStream&lt;/code&gt;方法来生成。通过并行流，我们可以将集合中的
 数据分成多个块，使用不同的线程分别处理各个数据块的流，这样可以将工作分配到多核处理器
 的所有内核，让同一个任务操作并行起来。下面以对数字1到n进行累加和的计算为例，说明并行流
@@ -230,7 +230,7 @@ public static long sequentialSum(long n) {
 }
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
-&lt;h3 id=&quot;将顺序流转换为并行流&quot;&gt;将顺序流转换为并行流&lt;/h3&gt;
+&lt;h2 id=&quot;将顺序流转换为并行流&quot;&gt;将顺序流转换为并行流&lt;/h2&gt;
 &lt;p&gt;通过对顺序流调用&lt;code class=&quot;highlighter-rouge&quot;&gt;parallel&lt;/code&gt;方法，可以将其标记转换为并行流。&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public static long parallelSum(long n) {
     return Stream.iterate(1L, i -&amp;gt; i + 1)
@@ -254,12 +254,12 @@ stream.parallel()
       .reduce();
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
-&lt;h3 id=&quot;并行流的线程池&quot;&gt;并行流的线程池&lt;/h3&gt;
+&lt;h2 id=&quot;并行流的线程池&quot;&gt;并行流的线程池&lt;/h2&gt;
 &lt;p&gt;并行流使用&lt;code class=&quot;highlighter-rouge&quot;&gt;ForkJoinPool&lt;/code&gt;提供的线程执行子集合的操作，它默认的线程数量是运行环境的处理器
 数量，这个值由&lt;code class=&quot;highlighter-rouge&quot;&gt;Runtime.getRuntime().availableProcessors()&lt;/code&gt;获得。该方法实际返回的
 是可用内核的数量，包括了超线程生成的虚拟内核。使用该默认值对绝大多数情况都是不错的。&lt;/p&gt;
 
-&lt;h3 id=&quot;测量流性能&quot;&gt;测量流性能&lt;/h3&gt;
+&lt;h2 id=&quot;测量流性能&quot;&gt;测量流性能&lt;/h2&gt;
 &lt;p&gt;对于上面通过归约完成数字并行求和的例子，我们期望顺序流可以划分成若干子部分，每个子流
 分别在不同的内核执行计算，最后，同一个归约操作会将每个子流的结果合并起来，得到整个
 原始流的最终结果。而由于并行操作，我们期望执行时间会比顺序执行要快，下面我们通过一个
@@ -294,7 +294,7 @@ measurePerf(ParallelStreams::parallelSum, 10_000_000L);
 因此，将&lt;code class=&quot;highlighter-rouge&quot;&gt;iterate&lt;/code&gt;操作并行化会导致多个线程同步顺序执行，要求每次操作在不同的线程上执行，
 实际上增加了处理开销。所以我们在调用&lt;code class=&quot;highlighter-rouge&quot;&gt;parallel&lt;/code&gt;方法之前，需要清除知晓背后的数据操作，
 是否适合并行化。
-    &lt;h4 id=&quot;更为有效的方法&quot;&gt;更为有效的方法&lt;/h4&gt;
+    &lt;h3 id=&quot;更为有效的方法&quot;&gt;更为有效的方法&lt;/h3&gt;
     &lt;p&gt;通过&lt;code class=&quot;highlighter-rouge&quot;&gt;LongStream.rangeClosed&lt;/code&gt;方法，我们首先避免了装箱拆箱操作，其次&lt;code class=&quot;highlighter-rouge&quot;&gt;rangeClosed&lt;/code&gt;
 方法产生的数字范围是很容易拆分为独立的小块，如生成范围[1,20]的数字序列，可以轻易划分为
 [1,5],[6,10],[11,15],[16,20]的独立子序列，从而可以分配到多个线程并行执行。&lt;/p&gt;
@@ -319,7 +319,7 @@ public static long parallelRangedSum(long n) {
 &lt;/div&gt;
 &lt;p&gt;运行结果可以看到&lt;code class=&quot;highlighter-rouge&quot;&gt;rangedSum&lt;/code&gt;方法耗时28ms，而&lt;code class=&quot;highlighter-rouge&quot;&gt;parallelRangedSum&lt;/code&gt;耗时9ms。从而我们
 得到了一个更为快捷的并行归约算法。&lt;/p&gt;
-&lt;h3 id=&quot;使用并行流的注意点&quot;&gt;使用并行流的注意点&lt;/h3&gt;
+&lt;h2 id=&quot;使用并行流的注意点&quot;&gt;使用并行流的注意点&lt;/h2&gt;
 &lt;ol&gt;
   &lt;li&gt;对流做递归划分，把每个子流的归纳操作分配到不同的线程上去，然后再把这些操作的结果合并
 成一个值。在多个内核之间移动数据的代价可能会比想象的大，因此需要保证任务在内核中并行
@@ -344,11 +344,11 @@ public static long parallelRangedSum(long n) {
 得到的性能提升。&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h3 id=&quot;分支合并框架&quot;&gt;分支/合并框架&lt;/h3&gt;
+&lt;h2 id=&quot;分支合并框架&quot;&gt;分支/合并框架&lt;/h2&gt;
 &lt;p&gt;分支/合并框架的目的是用递归的方式将可以并行的任务拆分为更小的任务，然后每个子任务的结果
 合并起来生成最终结果。它是&lt;code class=&quot;highlighter-rouge&quot;&gt;ExecutorService&lt;/code&gt;接口的一个实现，它把任务分配给线程池
 （默认为&lt;code class=&quot;highlighter-rouge&quot;&gt;ForkJoinPool&lt;/code&gt;）中的线程进行工作。&lt;/p&gt;
-&lt;h4 id=&quot;使用recursivetask&quot;&gt;使用RecursiveTask&lt;/h4&gt;
+&lt;h3 id=&quot;使用recursivetask&quot;&gt;使用RecursiveTask&lt;/h3&gt;
 &lt;p&gt;通过继承抽象类&lt;code class=&quot;highlighter-rouge&quot;&gt;RecursiveTask&amp;lt;V&amp;gt;&lt;/code&gt;，我们可以创建能够进行分支/合并的任务，并且提交到
 这个线程池中并行执行。泛型&lt;code class=&quot;highlighter-rouge&quot;&gt;V&lt;/code&gt;为任务的返回值类型，如果任务无返回值，则可以继承抽象类
 &lt;code class=&quot;highlighter-rouge&quot;&gt;RecursiveAction&lt;/code&gt;。两者仅需要实现唯一的抽象方法&lt;code class=&quot;highlighter-rouge&quot;&gt;compute&lt;/code&gt;。&lt;/p&gt;
@@ -458,7 +458,7 @@ if (n &amp;lt;= 1) {   // 初始两个数字0和1是不可分任务，直接返�
 }
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
-&lt;h3 id=&quot;使用分支合并框架的注意点&quot;&gt;使用分支/合并框架的注意点&lt;/h3&gt;
+&lt;h2 id=&quot;使用分支合并框架的注意点&quot;&gt;使用分支/合并框架的注意点&lt;/h2&gt;
 &lt;ol&gt;
   &lt;li&gt;因为对一个任务调用&lt;code class=&quot;highlighter-rouge&quot;&gt;join&lt;/code&gt;方法会阻塞调用方，直到被调用任务返回结果。因此我们需要在
 两个子任务的计算都开始后再调用它，否则每个子任务都需要等待先前子任务执行完成后才开始执行，
@@ -479,7 +479,7 @@ if (n &amp;lt;= 1) {   // 初始两个数字0和1是不可分任务，直接返�
 执行效率，而不是字节码解释执行的运行效率。&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h3 id=&quot;工作窃取&quot;&gt;工作窃取&lt;/h3&gt;
+&lt;h2 id=&quot;工作窃取&quot;&gt;工作窃取&lt;/h2&gt;
 &lt;p&gt;通常，我们将任务划分为大量执行时间相同的小任务是一个好的选择。在理想的情况下，划分
 出并行任务时，我们希望所有的CPU内核都能同样繁忙，而不是有的内核完成所有任务的执行，而
 其他内核正忙于处理队列中的任务，因为每个任务的执行时间实际上会依赖磁盘甚至外部服务，造成
@@ -488,7 +488,7 @@ if (n &amp;lt;= 1) {   // 初始两个数字0和1是不可分任务，直接返�
 双向任务队列，当某个内核执行完成它的任务队列后，它可以随机从其他还在运行任务的内核队列中
 窃取队尾的一个任务，从而继续执行下去，直到所有的任务均执行完成，这样可以有助于更好地
 平衡工作线程的负载。&lt;/p&gt;
-&lt;h3 id=&quot;spliterator拆分任务&quot;&gt;Spliterator拆分任务&lt;/h3&gt;
+&lt;h2 id=&quot;spliterator拆分任务&quot;&gt;Spliterator拆分任务&lt;/h2&gt;
 &lt;p&gt;在上述例子中，我们都是通过手工决定如何拆分任务，而对于并行流，我们并没有指定如何把流拆分
 为子流，这说明有一种自动拆分机制完成了任务划分。这就是java8新加入的接口&lt;code class=&quot;highlighter-rouge&quot;&gt;Spliterator&lt;/code&gt;。
 它的名称为”可分迭代器”，和&lt;code class=&quot;highlighter-rouge&quot;&gt;Iterator&lt;/code&gt;一样，也是用来遍历数据源中的元素，但是它是为了
@@ -509,15 +509,15 @@ if (n &amp;lt;= 1) {   // 初始两个数字0和1是不可分任务，直接返�
 执行；同时&lt;code class=&quot;highlighter-rouge&quot;&gt;estimateSize&lt;/code&gt;方法会用来评估还剩下多少元素需要遍历，即使无法精确计算，能够
 快速计算一个值也有利于让任务划分均匀一点。&lt;code class=&quot;highlighter-rouge&quot;&gt;characteristics&lt;/code&gt;类似于收集器接口中的同名
 方法，用于描述可分迭代器的一些划分特性，只不过返回的是&lt;code class=&quot;highlighter-rouge&quot;&gt;int&lt;/code&gt;型而不是枚举集合。&lt;/p&gt;
-&lt;h4 id=&quot;spliterator的拆分过程&quot;&gt;Spliterator的拆分过程&lt;/h4&gt;
+&lt;h3 id=&quot;spliterator的拆分过程&quot;&gt;Spliterator的拆分过程&lt;/h3&gt;
 &lt;p&gt;将数据源拆分为多个子部分是一个递归的操作过程，首先对一个&lt;code class=&quot;highlighter-rouge&quot;&gt;Spliterator&lt;/code&gt;调用&lt;code class=&quot;highlighter-rouge&quot;&gt;trySplit&lt;/code&gt;，
 生成第二个&lt;code class=&quot;highlighter-rouge&quot;&gt;Spliterator&lt;/code&gt;，第二步对这两个&lt;code class=&quot;highlighter-rouge&quot;&gt;Spliterator&lt;/code&gt;再分别调用&lt;code class=&quot;highlighter-rouge&quot;&gt;trySplit&lt;/code&gt;，结果得到
 四个&lt;code class=&quot;highlighter-rouge&quot;&gt;Spliterator&lt;/code&gt;，最终框架会递归调用直到&lt;code class=&quot;highlighter-rouge&quot;&gt;trySplit&lt;/code&gt;返回&lt;code class=&quot;highlighter-rouge&quot;&gt;null&lt;/code&gt;，于是任务不会继续拆分，
 整个任务的递归划分结束。而在任务拆分过程中，&lt;code class=&quot;highlighter-rouge&quot;&gt;characteristics&lt;/code&gt;方法中的特性会对任务的
 划分造成影响。&lt;/p&gt;
-&lt;h3 id=&quot;实现自己的spliterator&quot;&gt;实现自己的Spliterator&lt;/h3&gt;
+&lt;h2 id=&quot;实现自己的spliterator&quot;&gt;实现自己的Spliterator&lt;/h2&gt;
 &lt;p&gt;todo&lt;/p&gt;
-&lt;h3 id=&quot;附录a-通过benchmark框架评估性能&quot;&gt;附录A 通过Benchmark框架评估性能&lt;/h3&gt;
+&lt;h2 id=&quot;附录a-通过benchmark框架评估性能&quot;&gt;附录A 通过Benchmark框架评估性能&lt;/h2&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@State(Scope.Thread)
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)

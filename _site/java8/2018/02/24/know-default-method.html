@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>默认方法读书笔记</title>
+  <title>Default Method读书笔记</title>
   <meta name="description" content="什么是默认方法 我们知道在java7之前，接口中只能声明方法，而不能提供方法的实现，方法的实现应该在接口的 实现类，或实现了该接口的抽象类中提供。而在java8之后，我们在接口中通过default关键字， 可以为接口方法提供方法体，即声明并且实现了一个接口方法，而这个方法则称之为默认方法。例如 我们之所以能将集合...">
 
   <link rel="stylesheet" href="/assets/main.css">
@@ -63,12 +63,12 @@
         <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h1 class="post-title" itemprop="name headline">默认方法读书笔记</h1>
+    <h1 class="post-title" itemprop="name headline">Default Method读书笔记</h1>
     <p class="post-meta"><time datetime="2018-02-24T16:35:44+08:00" itemprop="datePublished">Feb 24, 2018</time></p>
   </header>
 
   <div class="post-content" itemprop="articleBody">
-    <h3 id="什么是默认方法">什么是默认方法</h3>
+    <h2 id="什么是默认方法">什么是默认方法</h2>
 <p>我们知道在java7之前，接口中只能声明方法，而不能提供方法的实现，方法的实现应该在接口的
 实现类，或实现了该接口的抽象类中提供。而在java8之后，我们在接口中通过<code class="highlighter-rouge">default</code>关键字，
 可以为接口方法提供方法体，即声明并且实现了一个接口方法，而这个方法则称之为默认方法。例如
@@ -86,12 +86,12 @@
 抽象类<code class="highlighter-rouge">AbstractCollection</code>均没有实现该方法，<code class="highlighter-rouge">stream</code>方法是通过<code class="highlighter-rouge">AbstractCollection</code>
 实现的接口<code class="highlighter-rouge">Collection</code>提供的默认实现，也就是说在接口实现类无需修改的情况下，实现类
 自动继承了接口的默认方法，实现了类库的平滑升级。</p>
-<h3 id="接口支持静态方法">接口支持静态方法</h3>
+<h2 id="接口支持静态方法">接口支持静态方法</h2>
 <p>java8除了引入默认方法，还允许我们在接口中声明静态方法。以前常用的模式是我们会定义接口
 以及提供对应的工具类，比如提供<code class="highlighter-rouge">Collection</code>接口然后提供<code class="highlighter-rouge">Collections</code>工具类。而工具类
 中的方法大多是与接口实例协作的静态方法，而现在接口中允许定义和实现静态方法后，我们可以
 将这部分静态方法转移到接口内部，因此工具类也就没有了存在的必要。</p>
-<h3 id="不同类型的兼容性">不同类型的兼容性</h3>
+<h2 id="不同类型的兼容性">不同类型的兼容性</h2>
 <p>变更导致对java程序的影响大体可以分为如下三种类型的兼容性。</p>
 <ol>
   <li>二进制的兼容性。对于二进制级别的兼容性来说，即使二进制文件发生了改变，但对于新老
@@ -105,7 +105,7 @@
 可以是变更接口的实现，也可以是增加新的接口（只要新的接口不被调用）</li>
 </ol>
 
-<h3 id="java8中的接口与抽象类">java8中的接口与抽象类</h3>
+<h2 id="java8中的接口与抽象类">java8中的接口与抽象类</h2>
 <p>虽然java8中的接口和抽象类都能包含抽象方法和提供方法的实现，但是它们之间依然存在如下
 本质区别。</p>
 <ol>
@@ -114,7 +114,7 @@
   <li>抽象类中可以定义成员变量，通过实例变量来保存一个通用状态，而接口中无法定义实例变量。</li>
 </ol>
 
-<h3 id="默认方法的用途">默认方法的用途</h3>
+<h2 id="默认方法的用途">默认方法的用途</h2>
 <p>除了上述为类库开发者提供了一种平滑升级库的方案外，默认方法在普通的业务开发者中也有用武之地。
 比如开发者定义了一个接口，这个接口中包含了一些需要实现类提供的方法，同时，也可以包含一些
 实现类可选的默认方法，比如一个接口提供了新增、查询和删除的方法，但是删除操作对于这个接口
@@ -131,7 +131,7 @@
 }
 </code></pre>
 </div>
-<h4 id="行为的多继承">行为的多继承</h4>
+<h3 id="行为的多继承">行为的多继承</h3>
 <p>由于一个类可以继承多个接口，而接口中由于提供了默认方法，因此我们可以得到一个类拥有多继承
 的效果，而在多继承中，接口的精致性和正交性可以最大程度帮助我们实现代码复用和行为组合。
 关于精致性是说一个接口处理的行为是内聚的，只做一种类型相关的事情。而正交性表明两个接口
@@ -142,13 +142,13 @@
 了移动和旋转的特性，为太阳提供了这部分通用能力。同理，我们也可以组合其他接口，为其他
 类提供代码复用和能力复用。这样做还有一个好处，就是当我们在接口中修改默认方法的逻辑，所有
 实现了该默认方法的实现类均会自动继承新的代码。（只要实现类没有覆盖默认方法）</p>
-<h4 id="对于使用继承的错误观点">对于使用继承的错误观点</h4>
+<h3 id="对于使用继承的错误观点">对于使用继承的错误观点</h3>
 <p>很多人一听到代码复用就想通过继承来实现，而继承并不是在任何时候都合适的。比如对一个拥有
 100个方法的类进行继承，而我们仅仅是需要使用其中的若干个方法。如果继承了这个类，那么我们
 的子类就会拥有很多并不需要的方法，这些暴露的方法会造成不必要的复杂性。这种情况下完全可以
 通过代理的方式来实现，通过在实现类中引用拥有100个方法的类或接口，然后由实现类提供我们
 需要的若干个方法，这些方法实际上是通过直接调用所引用的类来实现。</p>
-<h3 id="解决冲突的规则">解决冲突的规则</h3>
+<h2 id="解决冲突的规则">解决冲突的规则</h2>
 <p>由于一个类能够实现多个接口，而这些接口中如果出现了签名相同的默认方法，那么子类将会遇到
 方法签名的冲突。为了解决一个类同时继承了两个拥有相同方法签名接口的问题。java8定义了如下
 的冲突处理规则</p>
@@ -157,51 +157,53 @@
   <li>如果无法依据第一条判断，那么子接口的优先级更高。函数签名相同时，优先选择拥有最具体
 实现的默认方法的接口，即如果B继承了A，那么B就比A更具体。</li>
   <li>最后如果还是无法判断，集成了多个接口的类则必须通过显式覆盖和调用期望的方法，显式地
-选择使用哪一个默认方法的实现。否则会编译不通过。
-    <h3 id="规则实践">规则实践</h3>
-    <p>当要判断一个类中的方法是继承自哪一个父类或者接口提供的默认方法时，只要遵守解决冲突的三条
+选择使用哪一个默认方法的实现。否则会编译不通过。</li>
+</ol>
+
+<h2 id="规则实践">规则实践</h2>
+<p>当要判断一个类中的方法是继承自哪一个父类或者接口提供的默认方法时，只要遵守解决冲突的三条
 规则即可。首先看类或者父类是否有提供方法的实现，如果有则优先使用该方法；如果第一条不满足，
 则看与类最具体实现的父类或者接口是否有提供方法的实现。最具体可以理解为与调用方类最接近的
 父类或者接口。当上面两个规则依然不满足时，我们只能覆盖类中的相同签名的方法，提供自己的实现，
 或者显式地指定需要调用哪一个父类方法或父接口默认方法。下面看一些具体的例子。</p>
-    <div class="highlighter-rouge"><pre class="highlight"><code>public class MostSpecific{
- public static void main(String... args) {
-     new C().hello(); // B
-     new D().hello(); // A
-     new E().hello(); // B
-     new F().hello(); // F
-     new G().hello(); // F
- }
+<div class="highlighter-rouge"><pre class="highlight"><code>public class MostSpecific{
+    public static void main(String... args) {
+        new C().hello(); // B
+        new D().hello(); // A
+        new E().hello(); // B
+        new F().hello(); // F
+        new G().hello(); // F
+    }
 
- interface A{
-     default void hello() {
-         System.out.println("Hello from A");
-     }
- }
+    interface A{
+        default void hello() {
+            System.out.println("Hello from A");
+        }
+    }
 
- interface B extends A{
-     default void hello() {
-         System.out.println("Hello from B");
-     }
- }
+    interface B extends A{
+        default void hello() {
+            System.out.println("Hello from B");
+        }
+    }
 
- static class C implements B, A {}
+    static class C implements B, A {}
 
- static class D implements A {}
+    static class D implements A {}
 
- static class E extends D implements B, A{}
+    static class E extends D implements B, A{}
 
- static class F implements B, A {
-     public void hello() {
-         System.out.println("Hello from F");
-     }
- }
+    static class F implements B, A {
+        public void hello() {
+            System.out.println("Hello from F");
+        }
+    }
 
- static class G extends F implements B, A{}
+    static class G extends F implements B, A{}
 }
 </code></pre>
-    </div>
-    <p>对于类C，根据第一条规则，类C并没有提供<code class="highlighter-rouge">hello</code>方法的实现，然后看第二条规则，C继承了B和A
+</div>
+<p>对于类C，根据第一条规则，类C并没有提供<code class="highlighter-rouge">hello</code>方法的实现，然后看第二条规则，C继承了B和A
 接口，而因为B继承A接口，因此B接口比A接口更为具体，所以C应该使用B接口提供的默认方法。
 对于类D，根据第一条规则，D没有提供方法实现，D只有一个接口A，因此使用A的默认方法。
 对于类E，根据第一条规则，E和父类D均没有提供方法实现，而接口B和A中，B更为具体，因此B中
@@ -209,69 +211,67 @@
 对于类F，根据第一条规则，F实现了<code class="highlighter-rouge">hello</code>方法，因此直接调用F中的方法。
 对于类G，根据第一条规则，G虽然没有提供方法实现，但是G的父类F提供了方法实现，因此直接
 调用F中的方法。</p>
-    <h4 id="更多的实践">更多的实践</h4>
-    <p>当类C实现了包含相同签名方法的接口A和接口B，并且A和B并没有任何关系时，如果类C没有实现
+<h3 id="更多的实践">更多的实践</h3>
+<p>当类C实现了包含相同签名方法的接口A和接口B，并且A和B并没有任何关系时，如果类C没有实现
 <code class="highlighter-rouge">hello</code>方法，那么根据第一规则，类中没有方法实现，父类也没有，不满足第一规则。而根据第二
 规则，接口A和B都是类C的直接实现接口，层级一样，因此第二规则也无法判断。所以最终到第三
 规则，而第三规则告诉我们，我们必须要重写<code class="highlighter-rouge">hello</code>方法，否则会编译错误。而如果我们想直接
 使用A接口的默认方法，则需要在重写的方法里显式地调用A接口的默认方法，即<code class="highlighter-rouge">A.super.hello()</code>。</p>
-    <div class="highlighter-rouge"><pre class="highlight"><code>public class Ambiguous{
- public static void main(String... args) {
-     new C().hello();
- }
+<div class="highlighter-rouge"><pre class="highlight"><code>public class Ambiguous{
+    public static void main(String... args) {
+        new C().hello();
+    }
 
- interface A {
-     default void hello() {
-         System.out.println("Hello from A");
-     }
- }
+    interface A {
+        default void hello() {
+            System.out.println("Hello from A");
+        }
+    }
 
- interface B {
-     default void hello() {
-         System.out.println("Hello from B");
-     }
- }
+    interface B {
+        default void hello() {
+            System.out.println("Hello from B");
+        }
+    }
 
- static class C implements B, A {
-     // 必须显式地覆盖hello方法，提供自己的实现，或显式地调用需要调用的同签名方法
-     public void hello(){
-         A.super.hello();
-     }
- }
+    static class C implements B, A {
+        // 必须显式地覆盖hello方法，提供自己的实现，或显式地调用需要调用的同签名方法
+        public void hello(){
+            A.super.hello();
+        }
+    }
 }
 </code></pre>
-    </div>
-    <h3 id="菱形继承问题">菱形继承问题</h3>
-    <p>所谓菱形继承问题，是说ABCD的继承关系是一个菱形，首先BC接口均继承自A，而类D实现了BC接口，
+</div>
+<h2 id="菱形继承问题">菱形继承问题</h2>
+<p>所谓菱形继承问题，是说ABCD的继承关系是一个菱形，首先BC接口均继承自A，而类D实现了BC接口，
 那么在这种情况下，D方法究竟会输出什么？使用第一规则，类D没有提供<code class="highlighter-rouge">hello</code>方法，并且也没有
 父类。再看第二规则，B和C均为D类的直接继承接口，而实际上因为只有A接口提供了<code class="highlighter-rouge">hello</code>方法
 的实现，因此最终D的结果会执行A接口的默认方法。</p>
-    <div class="highlighter-rouge"><pre class="highlight"><code>public class Diamond{
- public static void main(String...args){
-     new D().hello();
- }
+<div class="highlighter-rouge"><pre class="highlight"><code>public class Diamond{
+    public static void main(String...args){
+        new D().hello();
+    }
 
- interface A{
-     default void hello(){
-         System.out.println("Hello from A");
-     }
- }
+    interface A{
+        default void hello(){
+            System.out.println("Hello from A");
+        }
+    }
 
- interface B extends A {}
+    interface B extends A {}
 
- interface C extends A {}
+    interface C extends A {}
 
- static class D implements B, C {}
+    static class D implements B, C {}
 }
 </code></pre>
-    </div>
-    <p>我们继续引申这个问题。如果接口C提供了相同签名的<code class="highlighter-rouge">hello</code>方法，那么根据第二原则，因为C提供了
+</div>
+<p>我们继续引申这个问题。如果接口C提供了相同签名的<code class="highlighter-rouge">hello</code>方法，那么根据第二原则，因为C提供了
 默认方法，比接口A更具体一些，因此接口C的方法会被调用。如果接口C提供的只是相同签名的抽象
 方法，而不是默认方法，结果会怎样？同样根据规则二，因为C接口相对A更加具体，因此需要调用
 接口C的方法，而接口C中只是定义了一个抽象方法，所以编译器要求类D实现该方法，否则该程序
 无法通过编译。</p>
-  </li>
-</ol>
 
   </div>
 
