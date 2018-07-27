@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>Default Method读书笔记</title>
-  <meta name="description" content="什么是默认方法 我们知道在java7之前，接口中只能声明方法，而不能提供方法的实现，方法的实现应该在接口的 实现类，或实现了该接口的抽象类中提供。而在java8之后，我们在接口中通过default关键字， 可以为接口方法提供方法体，即声明并且实现了一个接口方法，而这个方法则称之为默认方法。例如 我们之所以能将集合...">
+  <meta name="description" content="什么是默认方法 我们知道在java7之前，接口中只能声明方法，而不能提供方法的实现。而在java8之后，我们在 接口中通过default关键字，可以为接口方法提供方法体，即声明并且实现了一个接口方法， 而这个方法则称之为默认方法。例如我们之所以能将集合通过stream方法转换为流，是因为在 Collection接...">
 
   <link rel="stylesheet" href="/assets/main.css">
   <link rel="canonical" href="http://0.0.0.0:4000/java8/2018/02/24/know-default-method.html">
@@ -69,11 +69,10 @@
 
   <div class="post-content" itemprop="articleBody">
     <h2 id="什么是默认方法">什么是默认方法</h2>
-<p>我们知道在java7之前，接口中只能声明方法，而不能提供方法的实现，方法的实现应该在接口的
-实现类，或实现了该接口的抽象类中提供。而在java8之后，我们在接口中通过<code class="highlighter-rouge">default</code>关键字，
-可以为接口方法提供方法体，即声明并且实现了一个接口方法，而这个方法则称之为默认方法。例如
-我们之所以能将集合通过<code class="highlighter-rouge">stream</code>方法转换为流，是因为在<code class="highlighter-rouge">Collection</code>接口中，提供了<code class="highlighter-rouge">stream</code>
-默认方法的实现。</p>
+<p>我们知道在java7之前，接口中只能声明方法，而不能提供方法的实现。而在java8之后，我们在
+接口中通过<code class="highlighter-rouge">default</code>关键字，可以为接口方法提供方法体，即声明并且实现了一个接口方法，
+而这个方法则称之为默认方法。例如我们之所以能将集合通过<code class="highlighter-rouge">stream</code>方法转换为流，是因为在
+<code class="highlighter-rouge">Collection</code>接口中，提供了<code class="highlighter-rouge">stream</code>默认方法的实现。</p>
 <div class="highlighter-rouge"><pre class="highlight"><code>default Stream&lt;E&gt; stream() {
     return StreamSupport.stream(spliterator(), false);
 }
